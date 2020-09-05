@@ -28,7 +28,8 @@
         <h1 class="main__title">Войти на сайт</h1>
     </div>
     <div class="form-container">
-        <form class="form">
+        <form class="form" method="post">
+            
             <div class="form__group">
                 <label for="id_username" class="form__label">Имя</label>
                 <div class="form__field-group">
@@ -44,7 +45,8 @@
                 </div>
             </div>
             <div class="form__footer">
-                <button class="button button_style_blue">Войти</button>
+                {% csrf_token %}
+                <button class="button button_style_blue" name="login" value="Log In">Войти</button>
                 <a class="form__forgot-link">Забыли пароль?</a>
             </div>
         </form>
