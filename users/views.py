@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from users.forms import LoginForm
+from users.forms import LoginForm, UserEditForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def index(request):
@@ -37,3 +39,16 @@ def user_login(request):
     else:
         form = LoginForm()
     return render(request, 'authForm.html', {'form': form})
+
+@login_required
+def edit(request):
+    if request.method == 'POST':
+        user_form = UserEditForm()
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'Profile updated successfully')
+        else:
+            messages.error(request, 'Error updating your profile')
+    else:
+        user_form = UserEditForm()
+    return render(request,'changePassword.html', {'user_form': user_form})
