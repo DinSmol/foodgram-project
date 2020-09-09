@@ -41,7 +41,7 @@ def user_login(request):
     return render(request, 'authForm.html', {'form': form})
 
 @login_required
-def edit(request):
+def change_password(request):
     if request.method == 'POST':
         user_form = UserEditForm()
         if user_form.is_valid():
@@ -52,3 +52,18 @@ def edit(request):
     else:
         user_form = UserEditForm()
     return render(request,'changePassword.html', {'user_form': user_form})
+
+def follows(request):
+    pass
+
+def favourites(request):
+    pass
+
+def cart(request):
+    pass
+
+def logout(request):
+    pass
+
+def purchases(request):
+    print('dkfjs')
