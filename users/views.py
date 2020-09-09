@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 
 
 def index(request):
@@ -41,6 +42,11 @@ def user_login(request):
     return render(request, 'authForm.html', {'form': form})
 
 @login_required
+def logout(request):
+    logout(request)
+    return render(request, 'indexAuth.html')
+
+@login_required
 def change_password(request):
     if request.method == 'POST':
         user_form = UserEditForm()
@@ -60,9 +66,6 @@ def favourites(request):
     pass
 
 def cart(request):
-    pass
-
-def logout(request):
     pass
 
 def purchases(request):
