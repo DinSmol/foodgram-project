@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from users.views import index, user_login, change_password, cart, follows, favourites, purchases
+from users.views import index, user_login, change_password, cart, follows, favourites, purchases, logout
 from recipes import views
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import include
-from django.contrib.auth.views import LogoutView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,7 +31,7 @@ urlpatterns = [
     path('favourites/', views.new, name='favourites'),
     path('cart/', cart, name='cart'),
     path('follows/', follows, name='follows'),
-    path('logout/', LogoutView, name='logout'),
+    path('logout/', logout, name='logout'),
     path('purchases/', purchases, name='purchases'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

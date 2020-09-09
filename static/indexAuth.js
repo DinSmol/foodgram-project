@@ -33,7 +33,6 @@ const cardList = new CardList(container, '.card', header, api, true, {
     purchpurachases,
     favorites
 });
-alert("I am an alert box!");
 cardList.addEvent();
 
 

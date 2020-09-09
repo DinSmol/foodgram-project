@@ -5,7 +5,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout as django_logout
 
 
 def index(request):
@@ -43,8 +44,8 @@ def user_login(request):
 
 @login_required
 def logout(request):
-    logout(request)
-    return render(request, 'indexAuth.html')
+    django_logout(request)
+    return redirect('index')
 
 @login_required
 def change_password(request):
