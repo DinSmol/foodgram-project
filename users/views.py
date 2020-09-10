@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from users.forms import LoginForm, UserEditForm
+from users.forms import LoginForm, UserEditForm, UserRegistrationForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -66,8 +66,31 @@ def follows(request):
 def favourites(request):
     return render(request, 'favorite.html')
 
+def user_create(request):
+    
+    if request.method == 'POST':
+        import pdb; pdb.set_trace()
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            cd = form.cleaned_data
+            user = authenticate(request,
+            username=cd['username'],
+            password=cd['password'])
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('index')
+            else:
+                return HttpResponse('Disabled account')
+        else:
+            return HttpResponse('Invalid login')
+    else:
+        form = LoginForm()
+    return render(request, 'reg.html')
+
 def cart(request):
-    return render(request, 'shopList.html')
+    return render(request, 'reg.html')
 
 def purchases(request):
     return render(request, 'shopList.html')

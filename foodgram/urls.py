@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from users.views import index, user_login, change_password, cart, follows, favourites, purchases, logout
+from users.views import index, user_login, change_password, cart, follows, favourites, purchases, logout, user_create
 from recipes import views
 from django.conf.urls.static import static
 from django.conf import settings
@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('login/', user_login, name='login'),
+    path('user_create/', user_create, name='user_create'),
     path('change_password/', change_password, name='change_password'),
     path('new/', views.new, name='new'),
     path('favourites/', favourites, name='favourites'),
