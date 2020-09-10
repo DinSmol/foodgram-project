@@ -61,13 +61,13 @@ def change_password(request):
     return render(request,'changePassword.html', {'user_form': user_form})
 
 def follows(request):
-    pass
+    return render(request, 'myFollow.html')
 
 def favourites(request):
-    pass
+    return render(request, 'favorite.html')
 
 def cart(request):
-    pass
+    return render(request, 'shopList.html')
 
 def purchases(request):
-    print('dkfjs')
+    return render(request, 'shopList.html')

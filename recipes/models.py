@@ -16,7 +16,7 @@ class Tag(models.Model):
         
 
 class Recipe(models.Model):
-    name = models.CharField(max_length=64)
+    title = models.CharField(max_length=64)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField()
     description = models.TextField()
