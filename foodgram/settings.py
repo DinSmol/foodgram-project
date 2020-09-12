@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'orders',
+    'cart',
     'users',
     'ingredients',
     'recipes',
@@ -67,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.context_processors.cart',
             ],
         },
     },
@@ -104,6 +107,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#Authentication backends
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -142,3 +149,6 @@ STATICFILES_FINDERS = (
 # INTERNAL_IPS = [
 #     "127.0.0.1",
 # ]
+
+CART_SESSION_ID = 'cart'
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'

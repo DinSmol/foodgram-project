@@ -1,4 +1,3 @@
-
 class Api {
     constructor(apiUrl) {
         this.apiUrl =  apiUrl;
@@ -20,6 +19,7 @@ class Api {
     return fetch(`/purchases`, {
       method: 'POST',
       headers: {
+        'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({

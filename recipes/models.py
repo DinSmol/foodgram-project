@@ -15,17 +15,36 @@ class Tag(models.Model):
         return self.tag_name
         
 
+class RecipeIngredient(models.Model):
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(blank=True)
+
+    def __str__(self):
+        return self.ingredient.name
+
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField()
+    image = models.ImageField(blank=True)   #  add default picture
     description = models.TextField()
-    ingredients = models.ManyToManyField(Ingredient)
+    ingredients = models.ManyToManyField(RecipeIngredient)
     tag = models.ManyToManyField(Tag)
     cooking_duration = models.IntegerField()
     slug = models.SlugField()
 
     def __str__(self):
-        return self.name
+        return self.title
+
+    @property
+    def taglist(self):
+        return list(self.tag.all())
 
 
+class Follow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
+
+
+class Favourite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="favourites")

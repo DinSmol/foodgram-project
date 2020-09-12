@@ -1,0 +1,21 @@
+<!-- Комментарии -->
+{% load static %}
+{% for item in recipes %}
+<div class="card" data-id={{ item.id }}>
+    <a href="#" class="link" target="_blank"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
+    <div class="card__body">
+        <a class="card__title link" href="#" target="_blank">{{ item.title }}</a>
+        <ul class="card__items">
+            {% include "tags.html" with tags=item.taglist %}  
+        </ul>
+        <div class="card__items card__items_column">
+            <p class="card__text"><span class="icon-time"></span>{{ item.cooking_duration }}</p>
+            <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black">{{ item.author }}</a></p>
+        </div>
+    </div>
+    <div class="card__footer">
+        {% csrf_token %}
+        <button class="button button_style_light-blue" name="purchpurchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+    </div>
+</div>
+{% endfor %}

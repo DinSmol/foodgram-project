@@ -7,20 +7,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as django_logout
+from recipes.models import Recipe
+
 
 
 def index(request):
-    if request.user.is_anonymous:
-        return render(request, 'indexNotAuth.html')
-    # category = None
-    # categories = Category.objects.all()
-    # products = Product.objects.filter(available=True)
-    
-    # if category_slug:
-    #     category = get_object_or_404(Category, slug=category_slug)
-    #     products = products.filter(category=category)
-
-    return render(request, 'indexAuth.html')
+    recipes = Recipe.objects.all()
+    return render(request, 'recipes.html', {'recipes': recipes})
 
 def user_login(request):
     if request.method == 'POST':
@@ -67,16 +60,15 @@ def favourites(request):
     return render(request, 'favorite.html')
 
 def user_create(request):
-    
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(commit=False)
             cd = form.cleaned_data
             user = authenticate(request,
             username=cd['username'],
             password=cd['password'])
+            print(f'user: {user}')
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -92,5 +84,7 @@ def user_create(request):
 def cart(request):
     return render(request, 'reg.html')
 
-def purchases(request):
+def shoplist(request):
     return render(request, 'shopList.html')
+
+

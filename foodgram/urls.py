@@ -13,16 +13,32 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+
+from cart.views import PurcasesView
+
+
+from rest_framework.routers import DefaultRouter
+
+
+titles_router = DefaultRouter()
+titles_router.register(r'purchases', DefaultRouter, basename='purchases')
+
+
 from django.contrib import admin
 from django.urls import path
-from users.views import index, user_login, change_password, cart, follows, favourites, purchases, logout, user_create
+from users.views import index, user_login, change_password, cart, follows, favourites, logout, user_create
+from cart.views import cart_detail
 from recipes import views
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import include
+from ingredients.views import data_upl
 
 
 urlpatterns = [
+    path('', include(titles_router.urls)),
+    # path('purchases/<int:pk>/', views.PurcasesView.as_view()),
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('login/', user_login, name='login'),
@@ -33,7 +49,9 @@ urlpatterns = [
     path('cart/', cart, name='cart'),
     path('follows/', follows, name='follows'),
     path('logout/', logout, name='logout'),
-    path('purchases/', purchases, name='purchases'),
+    # path('purchases', views.purchases, name='purchases'),
+    path('shoplist', cart_detail, name='shoplist'),
+    path('upload/', data_upl, name='data_upl'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # if settings.DEBUG:
