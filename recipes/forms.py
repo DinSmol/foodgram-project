@@ -4,12 +4,17 @@
 from django.forms import ModelForm
 # from django.core.exceptions import ValidationError
 from django import forms
-from recipes.models import Ingredient
+from recipes.models import Ingredient, Recipe
 
 class IngredientForm(ModelForm):
     class Meta:
         model = Ingredient
         fields = ("name", "units")
+
+class RecipeForm(ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ("title", "tag", 'cooking_duration', 'description', 'image')
     
     # def clean_text(self):
     #     cleaned_data = self.cleaned_data['text']

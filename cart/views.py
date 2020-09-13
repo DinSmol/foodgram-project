@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from recipes.models import Recipe
 from .cart import Cart
+from rest_framework import status
 
 
 @require_POST
@@ -9,12 +10,24 @@ def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Recipe, id=product_id)
     cart.add(product=product)
+    return redirect('cart:cart_detail')
 
+# @require_POST
+# def cart_add(request, product_id):
+#     cart = Cart(request)
+#     product = get_object_or_404(Product, id=product_id)
+#     form = CartAddProductForm(request.POST)
+#     if form.is_valid():
+#         cd = form.cleaned_data
+#         cart.add(product=product,
+#                  quantity=cd['quantity'],
+#                  update_quantity=cd['update'])
+#     return redirect('cart:cart_detail')
 
 
 def cart_remove(request, product_id):
     cart = Cart(request)
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(Recipe, id=product_id)
     cart.remove(product)
     return redirect('cart:cart_detail')
 
@@ -30,77 +43,98 @@ def cart_detail(request):
     return render(request, 'shopList.html', {'cart': res})
 
 
-# from django.shortcuts import get_object_or_404
-# from django.utils.datastructures import MultiValueDictKeyError
-# from rest_framework.response import Response
-# from rest_framework import status, viewsets, filters
-# from rest_framework.permissions import IsAuthenticatedOrReadOnly
-# from .permissions import IsOwnerOrReadOnly
-# from .models import Post, Comment, Group, Follow
-# from .serializers import PostSerializer, CommentSerializer, GroupSerializer, FollowSerializer
-
-
-
-# class PurchasesView(viewsets.ModelViewSet):
-#     serializer_class = PostSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-
-#     def get_queryset(self):
-#             queryset = Post.objects.all()
-#             group = self.request.query_params.get('group', None)
-#             if group is not None:
-#                 queryset = queryset.filter(group=group)
-#             return queryset
-
-#     def perform_create(self, serializer):
-#         if serializer.is_valid:
-#             serializer.save(author=self.request.user)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import json
+from rest_framework.permissions import IsAuthenticated
 
 # from .models import Article
 # from .serializers import ArticleSerializer
 
+def purchases(request, *args, **kwargs):
+    import pdb; pdb.set_trace()
+    if request.method == 'GET':
+        cart = Cart(request)
+        print(cart.__dict__)
+        res = []
+        for val in cart.cart.values():
+            res.append(val)
+        return render(request, 'shopList.html', {'cart': res})
 
-class PurcasesView(APIView):
-    def get(self, request):
-        # articles = Article.objects.all()
-        # serializer = ArticleSerializer(articles, many=True)
-        return Response({"articles": serializer.data})
-
-    def post(self, request, *args, **kwargs):
-        
-        id = request.data.get('id')
+    if request.method == 'POST':
+        id = json.loads((request.body).decode('utf8'))['id']
         cart = Cart(request)
         product = get_object_or_404(Recipe, id=id)
         cart.add(product=product)
-        return render(request, 'shopList.html', {'cart': cart})
-        # article = request.data.get("article")
-        # # Create an article from the above data
-        # serializer = ArticleSerializer(data=article)
-        # if serializer.is_valid(raise_exception=True):
-        #     article_saved = serializer.save()
-        # return Response({"success": "Article '{}' created successfully".format(article_saved.title)})
-
-    def put(self, request, pk):
-        saved_article = get_object_or_404(Article.objects.all(), pk=pk)
-        data = request.data.get('article')
-        serializer = ArticleSerializer(instance=saved_article, data=data, partial=True)
-
-        if serializer.is_valid(raise_exception=True):
-            article_saved = serializer.save()
-
-        return Response({
-            "success": "Article '{}' updated successfully".format(article_saved.title)
-        })
-
-    def delete(self, request):
-        id = request.data.get('id')
+        res = []
+        for val in cart.cart.values():
+            res.append(val)
+        return render(request, 'shopList.html', {'cart': res}) 
+    
+    if request.method == 'DELETE':
+        id = request.resolver_match.kwargs.get('id')
         cart = Cart(request)
-        cart.remove(product=product)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        cart.remove(id)
+        res = []
+        for val in cart.cart.values():
+            res.append(val)
+        return render(request, 'shopList.html', {'cart': res})
+
+# def purchases_del(request, *args, **kwargs):
+#     id = json.loads((request.body).decode('utf8'))['id']
+#     cart = Cart(request)
+#     cart.remove(id)
+#     return render(request, 'shopList.html', {'cart': res})
+from django.contrib import messages
+from django.http import JsonResponse
+from django.views.generic import View
+
+
+class PurchasesView(View):
+    def get(self, request):
+        cart = Cart(request)
+        print(cart.__dict__)
+        res = []
+        for val in cart.cart.values():
+            res.append(val)
+        return render(request, 'shopList.html', {'cart': res})
+
+    def post(self, request, id):
+        recipe_id = json.loads(request.body).get('id')
+        recipe = get_object_or_404(Recipe, id=recipe_id)
+        cart = Cart(request)
+        cart.add(product=recipe)
+        return JsonResponse({'success': True})
+
+    def delete(self, request, id):
+        recipe = Recipe.objects.get(id=id)
+        cart = Cart(request)
+        cart.remove(id)
+        return JsonResponse({'success': True})
+
+    # def get(self, request):
+    #     cart = Cart(request)
+    #     print(cart.__dict__)
+    #     res = []
+    #     for val in cart.cart.values():
+    #         res.append(val)
+    #     return render(request, 'shopList.html', {'cart': res})
+
+    # def post(self, request, *args, **kwargs):
+    #     id = request.data.get('id')
+    #     cart = Cart(request)
+    #     product = get_object_or_404(Recipe, id=id)
+    #     cart.add(product=product)
+    #     res = []
+    #     for val in cart.cart.values():
+    #         res.append(val)
+    #     messages.success(request, 'Recipe added successfully')
+    #     return Response(status=status.HTTP_201_CREATED) 
+
+
+    # def delete(self, request, *args, **kwargs):
+    #     id = kwargs.get('id')
+    #     cart = Cart(request)
+    #     cart.remove(id)
+    #     return Response(status=status.HTTP_204_NO_CONTENT) 

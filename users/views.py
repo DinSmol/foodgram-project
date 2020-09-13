@@ -8,12 +8,17 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as django_logout
 from recipes.models import Recipe
+from ingredients.models import Ingredient
 
 
 
 def index(request):
     recipes = Recipe.objects.all()
     return render(request, 'recipes.html', {'recipes': recipes})
+
+# def index(request):
+#     ingredients = Ingredient.objects.all()
+#     return  {'ingredients': ingredients}
 
 def user_login(request):
     if request.method == 'POST':

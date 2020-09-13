@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     # 'debug_toolbar',
 ]
 
@@ -152,3 +153,5 @@ STATICFILES_FINDERS = (
 
 CART_SESSION_ID = 'cart'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

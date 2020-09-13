@@ -4,12 +4,14 @@ from django.contrib.auth.models import User
 
 
 class Tag(models.Model):
-    TAG_CHOICES = (
-        ('Завтрак', 'Завтрак'),
-        ('Обед', 'Обед'),
-        ('Ужин', 'Ужин'),
-    )
-    tag_name = models.CharField(max_length = 20, choices=TAG_CHOICES)
+    # TAG_CHOICES = (
+    #     ('Завтрак', 'Завтрак'),
+    #     ('Обед', 'Обед'),
+    #     ('Ужин', 'Ужин'),
+    # )
+    tag_name = models.CharField(max_length = 20, null=True)
+    value = models.CharField('Value', max_length=64)
+    style = models.CharField(max_length=64, null=True)
 
     def __str__(self):
         return self.tag_name

@@ -15,21 +15,15 @@ Including another URLconf
 """
 
 
-from cart.views import PurcasesView
 
-
-from rest_framework.routers import DefaultRouter
-
-
-titles_router = DefaultRouter()
-titles_router.register(r'purchases', DefaultRouter, basename='purchases')
 
 
 from django.contrib import admin
 from django.urls import path
 from users.views import index, user_login, change_password, cart, follows, favourites, logout, user_create
-from cart.views import cart_detail
+from cart.views import cart_detail, PurchasesView
 from recipes import views
+from ingredients.views import Ingredients
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import include
@@ -37,8 +31,12 @@ from ingredients.views import data_upl
 
 
 urlpatterns = [
-    path('', include(titles_router.urls)),
-    # path('purchases/<int:pk>/', views.PurcasesView.as_view()),
+    path('cart/', include('cart.urls', namespace='cart')),
+    # path('purchases', purchases, name='purchases'),
+    # path('purchases/<int:id>', purchases, name='purchases_del'),
+    path('ingredients/', Ingredients.as_view(), name='ingredients'),
+    path('purchases/', PurchasesView.as_view(), name='purchases'),
+    path('purchases/<int:id>/', PurchasesView.as_view(), name='purchases_add'),
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('login/', user_login, name='login'),
