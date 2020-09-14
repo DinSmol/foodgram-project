@@ -39,6 +39,7 @@ urlpatterns = [
     path('purchases/<int:id>/', PurchasesView.as_view(), name='purchases_add'),
     path('admin/', admin.site.urls),
     path('', index, name='index'),
+    path('recipes/<int:id>', views.recipe_detail, name='recipe_detail'),
     path('login/', user_login, name='login'),
     path('user_create/', user_create, name='user_create'),
     path('change_password/', change_password, name='change_password'),

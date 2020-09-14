@@ -6,6 +6,7 @@ from recipes.models import Recipe
 from django.views.decorators.http import require_POST
 import json
 from .forms import RecipeForm
+from django.shortcuts import redirect
 
 
 # Create your views here.
@@ -14,7 +15,6 @@ def new(request):
         ingredients = get_ingredients(request)
         tags = get_tags(request)
         form = RecipeForm(request.POST, files=request.FILES or None)
-        import pdb; pdb.set_trace()
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.author = request.user
@@ -24,7 +24,6 @@ def new(request):
     else:
         form = RecipeForm()
         tags = {'Завтрак': 'Завтрак','Обед': 'Обед', 'Ужин': 'Ужин'}
-    import pdb; pdb.set_trace()
     return render(request, 'formRecipe.html', {'form': form, 'tags': tags})
 
 
@@ -44,3 +43,10 @@ def get_tags(request):
     if 'dinner' in request.POST.keys():
         tags.append('Ужин')
     return tags
+
+def recipe_detail(request, id):
+    recipe = Recipe.objects.get(id=id)
+    # ingredients = get_ingredients(request)
+    # tags = get_tags(request)
+    form = RecipeForm(instance=recipe, files=request.FILES or None)
+    return render(request, 'formChangeRecipe.html', {'form': form})
