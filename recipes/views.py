@@ -7,19 +7,22 @@ from django.views.decorators.http import require_POST
 import json
 from .forms import RecipeForm
 from django.shortcuts import redirect
-
+from recipes.models import Tag
 
 # Create your views here.
 def new(request):
     if request.method == 'POST':
+        
         ingredients = get_ingredients(request)
         tags = get_tags(request)
         form = RecipeForm(request.POST, files=request.FILES or None)
+        
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.author = request.user
             recipe.save()
-            
+            for tag in tags: recipe.tag.add(tag)
+            for item in ingredients: recipe.ingredients.add(item)
             return redirect('index')
     else:
         form = RecipeForm()
@@ -36,12 +39,8 @@ def purchases(request):
 
 def get_tags(request):
     tags = []
-    if 'breakfast' in request.POST.keys():
-        tags.append('Завтрак')
-    if 'lunch' in request.POST.keys():
-        tags.append('Обед')
-    if 'dinner' in request.POST.keys():
-        tags.append('Ужин')
+    for key in request.POST.getlist('tag'):
+        tags.append(Tag.objects.get(id=int(key)))
     return tags
 
 def recipe_detail(request, id):
@@ -49,5 +48,8 @@ def recipe_detail(request, id):
     # ingredients = get_ingredients(request)
     # tags = get_tags(request)
     form = RecipeForm(instance=recipe, files=request.FILES or None)
-    # import pdb; pdb.set_trace()
-    return render(request, 'formChangeRecipe.html', {'form': form})
+    tag_ids = []
+    for tag_item in form.instance.tag.all():
+        tag_ids.append(tag_item.id)
+
+    return render(request, 'formChangeRecipe.html', {'form': form, 'tags': tag_ids})

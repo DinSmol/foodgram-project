@@ -12,6 +12,7 @@ admin.site.register(Tag, TagAdmin)
 
 
 class RecipeAdmin(admin.ModelAdmin):
+    raw_id_fields = ("ingredients", "tag")
     list_display = ("id", "title")
     search_fields = ("title",)
     empty_value_display = '-пусто-'

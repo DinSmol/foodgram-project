@@ -1,5 +1,6 @@
 import csv
 from ingredients.models import Ingredient
+from recipes.models import RecipeIngredient
 
 
 def data_upl(request):
@@ -31,9 +32,13 @@ class Ingredients(View):
 
 def get_ingredients(request):
     ingredients = {}
+    res = []
+    import pdb; pdb.set_trace()
     for key in request.POST:
         if key.startswith('nameIngredient'):
             val_key = key.replace('name', 'value')
-            ingredients[request.POST[key]] = request.POST[val_key]
-    return ingredients
+            ingredient = Ingredient.objects.get(name=request.POST[key])
+            rec_ingredient = RecipeIngredient.objects.create(ingredient=ingredient, quantity=request.POST[val_key])
+            res.append(rec_ingredient)
+    return res
     

@@ -13,7 +13,7 @@ from ingredients.models import Ingredient
 
 
 def index(request):
-    recipes = Recipe.objects.all()
+    recipes = Recipe.objects.all().order_by('-created')
     return render(request, 'recipes.html', {'recipes': recipes})
 
 # def index(request):

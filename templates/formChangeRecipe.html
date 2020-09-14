@@ -11,24 +11,7 @@
     <link rel="stylesheet" href="{% static '/pages/form.css' %}">
 </head>
 <body class="body">
-<header class="header">
-    <nav class="nav">
-        <div class="nav__container container">
-            <ul class="nav__items list">
-                <li class="nav__item"><a href="#" class="nav__link link">Рецепты</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Мои подписки</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Создать рецепт</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Избранное</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Список покупок</a> <span class="badge badge_style_blue nav__badge" id="counter"></span></li>
-
-            </ul>
-            <ul class="nav__items list">
-                <li class="nav__item"><a href="#" class="nav__link link">Изменить пароль</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Выход</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
+    {% include 'header.html' %}
 <main class="main container">
     <div class="main__header">
         <h1 class="main__title">Редактирование рецепта</h1>
@@ -45,17 +28,19 @@
             <div class="form__group">
                 <p class="form__label">Теги</p>
                 <div class="form__field-group">
-                    <div class="tags">
-                        <div>{{ form.tag }}</div>
+                    <div class="tags">          
                         {% for tag_id, value in form.fields.tag.choices %}
-                        
                         <div class="tags__item">
                             <input
                                 type="checkbox"
                                 name="tag"
-                                value=""
-                                id="id_{{tag_id}}"
+                                value="{{ tag_id }}"
+                                id="{{ tag_id }}"
+                                {% if tag_id in tags %}
+                                checked="checked"
+                                {% endif %}
                                 class="tags__checkbox tags__checkbox_style_{{tag_id.instance.style }}">
+                                <option value="{{ x }}"{% if form.fields.tag.value == x %} selected{% endif %}>{{ y }}</option>
                             <label for="id_{{ tag_id }}" class="tags__label">{{value}}</label>
                         </div>
                         {% endfor %}
@@ -106,7 +91,7 @@
             <div class="form__group">
                 <label for="id_description" class="form__label">Описание</label>
                 <div class="form__field-group">
-                    <textarea name="description" id="id_description" rows="8" class="form__textarea" value=${{ form.description }}></textarea>
+                    <textarea name="description" id="id_description" rows="8" class="form__textarea" value="{{ form.description }}"></textarea>
                     <span class="form__error"></span>
                 </div>
             </div>
@@ -126,15 +111,7 @@
 
 
 </main>
-<footer class="footer">
-    <div class="footer__container container">
-        <a href="#" class="footer__brand link">Продуктовый помощник</a>
-        <ul class="footer__items">
-            <li class="footer__item"><a href="#" class="footer__link link">Об авторе </a></li>
-            <li class="footer__item"><a href="#" class="footer__link link">Технологии</a></li>
-        </ul>
-    </div>
-</footer>
+{% include 'footer.html' %}
 <script src="{% static '/js/config/config.js' %}"></script>
 <script src="{% static '/js/components/Header.js' %}"></script>
 <script src="{% static '/js/utils/debouncing.js' %}"></script>

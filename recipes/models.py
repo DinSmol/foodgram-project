@@ -9,9 +9,9 @@ class Tag(models.Model):
     #     ('Обед', 'Обед'),
     #     ('Ужин', 'Ужин'),
     # )
-    tag_name = models.CharField(max_length = 20, null=True)
+    tag_name = models.CharField('Name',max_length = 20, null=True)
     value = models.CharField('Value', max_length=64)
-    style = models.CharField(max_length=64, null=True)
+    style = models.CharField('Style', max_length=64, null=True)
 
     def __str__(self):
         return self.tag_name
@@ -33,6 +33,7 @@ class Recipe(models.Model):
     tag = models.ManyToManyField(Tag)
     cooking_duration = models.IntegerField()
     slug = models.SlugField()
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title

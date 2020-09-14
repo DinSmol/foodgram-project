@@ -4,7 +4,7 @@
 <div class="card" data-id={{ item.id }}>
     <a href="#" class="link" target="_blank"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
     <div class="card__body">
-        <a class="card__title link" href="#" target="_blank">{{ item.title }}</a>
+        <a class="card__title link" href="recipes/{{ item.id }}" target="_blank">{{ item.title }}</a>
         <ul class="card__items">
             {% include "tags.html" with tags=item.taglist %}  
         </ul>
