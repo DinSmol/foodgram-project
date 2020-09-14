@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_filters %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -38,7 +39,6 @@
                 <label for="id_name" class="form__label">Название рецепта</label>
                 <div class="form__field-group">
                     {{ form.title|addclass:"form__input" }}
-                    <input type="text" id="id_name" name="{{ form.title }}" class="form__input">
                     <span class="form__error"></span>
                 </div>
             </div>
@@ -46,18 +46,19 @@
                 <p class="form__label">Теги</p>
                 <div class="form__field-group">
                     <div class="tags">
+                        <div>{{ form.tag }}</div>
+                        {% for tag_id, value in form.fields.tag.choices %}
+                        
                         <div class="tags__item">
-                            <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange">
-                            <label for="id_breakfast" class="tags__label">Завтрак</label>
+                            <input
+                                type="checkbox"
+                                name="tag"
+                                value=""
+                                id="id_{{tag_id}}"
+                                class="tags__checkbox tags__checkbox_style_{{tag_id.instance.style }}">
+                            <label for="id_{{ tag_id }}" class="tags__label">{{value}}</label>
                         </div>
-                        <div class="tags__item">
-                            <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green" checked>
-                            <label for="id_lunch" class="tags__label">Обед</label>
-                        </div>
-                        <div class="tags__item">
-                            <input type="checkbox" name="dinner" id="id_dinner" class="tags__checkbox tags__checkbox_style_purple" checked>
-                            <label for="id_dinner" class="tags__label">Ужин</label>
-                        </div>
+                        {% endfor %}
                     </div>
                     <span class="form__error"></span>
                 </div>
@@ -105,7 +106,7 @@
             <div class="form__group">
                 <label for="id_description" class="form__label">Описание</label>
                 <div class="form__field-group">
-                    <textarea name="description" id="id_description" rows="8" class="form__textarea"></textarea>
+                    <textarea name="description" id="id_description" rows="8" class="form__textarea" value=${{ form.description }}></textarea>
                     <span class="form__error"></span>
                 </div>
             </div>

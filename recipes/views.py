@@ -49,4 +49,5 @@ def recipe_detail(request, id):
     # ingredients = get_ingredients(request)
     # tags = get_tags(request)
     form = RecipeForm(instance=recipe, files=request.FILES or None)
+    # import pdb; pdb.set_trace()
     return render(request, 'formChangeRecipe.html', {'form': form})
