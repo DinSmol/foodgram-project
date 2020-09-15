@@ -50,7 +50,7 @@ def get_tags(request):
 		tags.append(Tag.objects.get(id=int(key)))
 	return tags
 
-def recipe_detail(request, id):
+def recipe_change(request, id):
 	recipe = Recipe.objects.get(id=id)
 	# ingredients = get_ingredients(request)
 	# tags = get_tags(request)
@@ -65,6 +65,22 @@ def recipe_detail(request, id):
 		ingredients.append({'id': ingredient.id, 'name': ingredient.name, 'quantity': item.quantity, 'units': ingredient.units})
 
 	return render(request, 'formChangeRecipe.html', {'form': form, 'tags': tag_ids, 'ingredients': ingredients})
+
+def recipe_detail(request, id):
+	recipe = Recipe.objects.get(id=id)
+	# ingredients = get_ingredients(request)
+	# tags = get_tags(request)
+	# form = RecipeForm(instance=recipe, files=request.FILES or None)
+	# tag_ids = []
+	# ingredients = []
+	# for tag_item in form.instance.tag.all():
+	# 	tag_ids.append(tag_item.id)
+	# for item in form.instance.ingredients.all():
+	# 	ingredient = Ingredient.objects.get(id=item.ingredient_id)
+	# 	# import pdb; pdb.set_trace()
+	# 	ingredients.append({'id': ingredient.id, 'name': ingredient.name, 'quantity': item.quantity, 'units': ingredient.units})
+
+	return render(request, 'singlePage.html', {'recipe': recipe})
 
 from django.contrib import messages
 from django.http import JsonResponse

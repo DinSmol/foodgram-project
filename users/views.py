@@ -17,7 +17,7 @@ def index(request):
         values = request.POST.getlist('checked[]')
         import pdb; pdb.set_trace()
     recipes = Recipe.objects.all().order_by('-created')
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     return render(request, 'recipes.html', {'recipes': recipes})
 
 def user_profile(request, id):
