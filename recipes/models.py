@@ -22,7 +22,7 @@ class RecipeIngredient(models.Model):
 
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name="recipe_user", on_delete=models.CASCADE)
     image = models.ImageField(blank=True)   #  add default picture
     description = models.TextField()
     ingredients = models.ManyToManyField(RecipeIngredient)

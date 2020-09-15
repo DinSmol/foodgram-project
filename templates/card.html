@@ -9,8 +9,8 @@
             {% include "tags.html" with tags=item.taglist %}  
         </ul>
         <div class="card__items card__items_column">
-            <p class="card__text"><span class="icon-time"></span>{{ item.cooking_duration }}</p>
-            <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black">{{ item.author }}</a></p>
+            <p class="card__text"><span class="icon-time"></span>{{ item.cooking_duration }} мин.</p>
+            <p class="card__text"><span class="icon-user"></span> <a href="users/{{ item.author.id }}" style="color: black">{{ item.author }}</a></p>
         </div>
     </div>
     <div class="card__footer">

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from recipes.models import Tag, Recipe, RecipeIngredient
+from recipes.models import Tag, Recipe, RecipeIngredient, Follow
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -9,7 +9,7 @@ class TagAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Tag, TagAdmin)
-
+admin.site.register(Follow)
 
 class RecipeAdmin(admin.ModelAdmin):
     raw_id_fields = ("ingredients", "tag", "favourite")

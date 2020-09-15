@@ -7,14 +7,24 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as django_logout
-from recipes.models import Recipe
+from recipes.models import Recipe, Follow
 from ingredients.models import Ingredient
+from django.contrib.auth.models import User
 
 
 def index(request):
+    if request.method == "POST":
+        values = request.POST.getlist('checked[]')
+        import pdb; pdb.set_trace()
     recipes = Recipe.objects.all().order_by('-created')
+    import pdb; pdb.set_trace()
     return render(request, 'recipes.html', {'recipes': recipes})
 
+def user_profile(request, id):
+    author = User.objects.get(id=id)
+    recipes = Recipe.objects.filter(author=author).order_by('-created')
+    # import pdb; pdb.set_trace()
+    return render(request, 'authorRecipe.html', {'recipes': recipes, 'author': author})
 # def index(request):
 #     ingredients = Ingredient.objects.all()
 #     return  {'ingredients': ingredients}
@@ -58,7 +68,22 @@ def change_password(request):
     return render(request,'changePassword.html', {'user_form': user_form})
 
 def follows(request):
-    return render(request, 'myFollow.html')
+    # import pdb; pdb.set_trace()
+    res = {}
+    recipes = []
+    user = request.user
+    follow = Follow.objects.filter(user=user)
+    print(follow)
+    if follow:
+        authors = [item.author for item in follow]
+        # # import pdb; pdb.set_trace()
+        # for author in authors:
+        #     res[author] = Recipe.objects.filter(author=author)
+        #     recipes.append(res)
+        #     res = {}
+        
+        return render(request, 'myFollow.html', {'authors': authors})
+    return render(request, 'myFollow.html') 
 
 def user_create(request):
     if request.method == 'POST':

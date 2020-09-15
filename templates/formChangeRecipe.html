@@ -86,7 +86,7 @@
             <div class="form__group">
                 <label for="id_description" class="form__label">Описание</label>
                 <div class="form__field-group">
-                    <textarea name="description" id="id_description" rows="8" class="form__textarea">{{ form.description.value }}</textarea>
+                    <textarea name="description" id="id_description" rows="8" class="form__textarea">{{ form.instance }}</textarea>
                     <span class="form__error"></span>
                 </div>
             </div>
@@ -100,7 +100,7 @@
             </div>
             <div class="form__footer">
                 {% csrf_token %}
-                <button class="button button_style_blue">Сохранить</button> <a style="margin-left: 2.5em" href="#" class="form__ingredient-link">Удалить</a>
+                <button class="button button_style_blue">Сохранить</button> <a style="margin-left: 2.5em" href="{{ form.instance.id }}/terminate" class="form__ingredient-link">Удалить</a>
             </div>
         </form>
     </div>
