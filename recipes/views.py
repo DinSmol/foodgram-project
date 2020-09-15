@@ -8,6 +8,7 @@ import json
 from .forms import RecipeForm
 from django.shortcuts import redirect
 from recipes.models import Tag
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 def new(request):
@@ -49,7 +50,44 @@ def recipe_detail(request, id):
     # tags = get_tags(request)
     form = RecipeForm(instance=recipe, files=request.FILES or None)
     tag_ids = []
+    ingredients = []
     for tag_item in form.instance.tag.all():
         tag_ids.append(tag_item.id)
+    for item in form.instance.ingredients.all():
+        ingredient = Ingredient.objects.get(id=item.ingredient_id)
+        # import pdb; pdb.set_trace()
+        ingredients.append({'id': ingredient.id, 'name': ingredient.name, 'quantity': item.quantity, 'units': ingredient.units})
 
-    return render(request, 'formChangeRecipe.html', {'form': form, 'tags': tag_ids})
+    return render(request, 'formChangeRecipe.html', {'form': form, 'tags': tag_ids, 'ingredients': ingredients})
+
+from django.contrib import messages
+from django.http import JsonResponse
+from django.views.generic import View
+
+def favoutites(request):
+    user = request.user
+    recipes = user.fav_recipes.all()
+    return render(request, 'favorite.html', {'recipes': recipes})
+
+class FavouritesView(View):
+    def get(self, request):
+        import pdb; pdb.set_trace()
+        # cart = Cart(request)
+        # print(cart.__dict__)
+        # res = []
+        # for val in cart.cart.values():
+        #     res.append(val)
+        return render(request, 'favorite.html')
+
+    def post(self, request, id):
+        import pdb; pdb.set_trace()
+        
+        recipe = get_object_or_404(Recipe, id=id)
+        recipe.favourite.add(request.user)
+        return JsonResponse({'success': True})
+
+    def delete(self, request, id):
+        recipe = Recipe.objects.get(id=id)
+        cart = Cart(request)
+        cart.remove(id)
+        return JsonResponse({'success': True})

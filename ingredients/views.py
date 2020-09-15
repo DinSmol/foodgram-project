@@ -31,9 +31,7 @@ class Ingredients(View):
         return JsonResponse(list(ings), safe=False)
 
 def get_ingredients(request):
-    ingredients = {}
     res = []
-    import pdb; pdb.set_trace()
     for key in request.POST:
         if key.startswith('nameIngredient'):
             val_key = key.replace('name', 'value')

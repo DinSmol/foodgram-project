@@ -59,22 +59,16 @@
                         <input type="number" id="cantidad" class="form__input" min="0">
                         <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
                     </div>
-
                     <div class="form__field-group-ingredientes-container">
-                        <div class="form__field-item-ingredient" id="ing_3">
-                            <span> Оливки 10шт.</span>
-                            <span class="form__field-item-delete"></span>
-                            <input id="nameIngredient_3" name="nameIngredient_3" type="hidden" value="Оливки">
-                            <input id="valueIngredient_3" name="valueIngredient_3" type="hidden" value="10">
-                            <input id="unitsIngredient_3" name="unitsIngredient_3" type="hidden" value="шт.">
-                        </div>
-                        <div class="form__field-item-ingredient" id="ing_2">
-                            <span> Картошка 5шт.</span>
-                            <span class="form__field-item-delete"></span>
-                            <input id="nameIngredient_2" name="nameIngredient_2" type="hidden" value="Картошка">
-                            <input id="valueIngredient_2" name="valueIngredient_2" type="hidden" value="5">
-                            <input id="unitsIngredient_2" name="unitsIngredient_2" type="hidden" value="шт.">
-                        </div>
+                    
+                    {% for item in ingredients %}
+                    <div class="form__field-item-ingredient" id="ing_{{item.id}}"><span>{{ item.name }}</span> 
+                        <span class="form__field-item-delete"></span>
+                        <input id="nameIngredient_{{item.id}}" name="nameIngredient_{{item.id}}" type="hidden" value={{ item.name }}>
+                        <input id="nameIngredient_{{item.id}}" name="nameIngredient_{{item.id}}" type="hidden" value={{ item.quantity }}>
+                        <input id="nameIngredient_{{item.id}}" name="nameIngredient_{{item.id}}" type="hidden" value={{ item.units }}>
+                    </div>
+                    {% endfor %}
                     </div>
                     <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
                     <span class="form__error"></span>
@@ -83,15 +77,16 @@
             <div class="form__group">
                 <label for="id_time" class="form__label">Время приготовления</label>
                 <div class="form__field-group form__field-group_time">
-                    <input type="text" id="id_time" class="form__input" name={{ form.cooking_duration }} >
+                    <input type="text" id="id_time" class="form__input" name={{ form.cooking_duration }}>
                     <label for="id_time" class="form__label">мин. </label>
                     <span class="form__error"></span>
                 </div>
             </div>
+            
             <div class="form__group">
                 <label for="id_description" class="form__label">Описание</label>
                 <div class="form__field-group">
-                    <textarea name="description" id="id_description" rows="8" class="form__textarea" value="{{ form.description }}"></textarea>
+                    <textarea name="description" id="id_description" rows="8" class="form__textarea">{{ form.description.value }}</textarea>
                     <span class="form__error"></span>
                 </div>
             </div>
@@ -104,12 +99,11 @@
                 </div>
             </div>
             <div class="form__footer">
+                {% csrf_token %}
                 <button class="button button_style_blue">Сохранить</button> <a style="margin-left: 2.5em" href="#" class="form__ingredient-link">Удалить</a>
             </div>
         </form>
     </div>
-
-
 </main>
 {% include 'footer.html' %}
 <script src="{% static '/js/config/config.js' %}"></script>

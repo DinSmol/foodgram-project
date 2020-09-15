@@ -2,7 +2,7 @@
 {% load static %}
 {% for item in recipes %}
 <div class="card" data-id={{ item.id }}>
-    <a href="#" class="link" target="_blank"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
+    <a href="recipes/{{ item.id }}" class="link"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
     <div class="card__body">
         <a class="card__title link" href="recipes/{{ item.id }}" target="_blank">{{ item.title }}</a>
         <ul class="card__items">
@@ -15,7 +15,8 @@
     </div>
     <div class="card__footer">
         {% csrf_token %}
-        <button class="button button_style_light-blue" name="purchpurchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+        <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
     </div>
 </div>
 {% endfor %}

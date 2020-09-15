@@ -8,7 +8,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class UserRegistrationForm(forms.ModelForm):
+class UserRegistrationForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
     email = forms.EmailField()
@@ -18,6 +18,16 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = ['username', 'password', 'email']
 
+    def save(self, commit=True):
+        try:
+            user = User.objects.create(
+                username=self.data['username'],
+                email=self.data['email'],
+                password=self.data['password']
+                )
+        except Exception:
+            return None
+        return user
 
     # def clean_password2(self):
     #     cd = self.cleaned_data

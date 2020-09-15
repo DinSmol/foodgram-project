@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from users.views import index, user_login, change_password, cart, follows, favourites, logout, user_create
+from users.views import index, user_login, change_password, cart, follows, logout, user_create
 from cart.views import cart_detail, PurchasesView
 from recipes import views
 from ingredients.views import Ingredients
@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import include
 from ingredients.views import data_upl
+
 
 
 urlpatterns = [
@@ -20,11 +21,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('recipes/<int:id>', views.recipe_detail, name='recipe_detail'),
+    path('favorites/<int:id>', views.FavouritesView.as_view(), name='favorites'),
+    path('favourites/', views.favoutites, name='favourites'),
     path('login/', user_login, name='login'),
     path('user_create/', user_create, name='user_create'),
     path('change_password/', change_password, name='change_password'),
     path('new/', views.new, name='new'),
-    path('favourites/', favourites, name='favourites'),
     path('cart/', cart, name='cart'),
     path('follows/', follows, name='follows'),
     path('logout/', logout, name='logout'),

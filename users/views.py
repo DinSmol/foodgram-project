@@ -11,7 +11,6 @@ from recipes.models import Recipe
 from ingredients.models import Ingredient
 
 
-
 def index(request):
     recipes = Recipe.objects.all().order_by('-created')
     return render(request, 'recipes.html', {'recipes': recipes})
@@ -61,27 +60,25 @@ def change_password(request):
 def follows(request):
     return render(request, 'myFollow.html')
 
-def favourites(request):
-    return render(request, 'favorite.html')
-
 def user_create(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
+        import pdb; pdb.set_trace()
         if form.is_valid():
-            form.save(commit=False)
-            cd = form.cleaned_data
-            user = authenticate(request,
-            username=cd['username'],
-            password=cd['password'])
+            user = form.save(commit=False)
+            # cd = form.cleaned_data
+            # user = authenticate(request,
+            # username=cd['username'],
+            # password=cd['password'])
             print(f'user: {user}')
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect('index')
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('index')
+                else:
+                    return HttpResponse('Disabled account')
             else:
-                return HttpResponse('Disabled account')
-        else:
-            return HttpResponse('Invalid login')
+                return HttpResponse('Invalid login')
     else:
         form = LoginForm()
     return render(request, 'reg.html')

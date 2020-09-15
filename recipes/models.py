@@ -4,11 +4,6 @@ from django.contrib.auth.models import User
 
 
 class Tag(models.Model):
-    # TAG_CHOICES = (
-    #     ('Завтрак', 'Завтрак'),
-    #     ('Обед', 'Обед'),
-    #     ('Ужин', 'Ужин'),
-    # )
     tag_name = models.CharField('Name',max_length = 20, null=True)
     value = models.CharField('Value', max_length=64)
     style = models.CharField('Style', max_length=64, null=True)
@@ -24,6 +19,7 @@ class RecipeIngredient(models.Model):
     def __str__(self):
         return self.ingredient.name
 
+
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,6 +30,7 @@ class Recipe(models.Model):
     cooking_duration = models.IntegerField()
     slug = models.SlugField()
     created = models.DateTimeField(auto_now_add=True)
+    favourite = models.ManyToManyField(User, related_name="fav_recipes", blank=True)
 
     def __str__(self):
         return self.title
@@ -48,6 +45,3 @@ class Follow(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
 
 
-class Favourite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="favourites")
