@@ -14,16 +14,17 @@ from django.contrib.auth.models import User
 
 def new(request):
 	if request.method == 'POST':
+		
 		ingredients = get_ingredients(request)
 		tags = get_tags(request)
 		form = RecipeForm(request.POST, files=request.FILES or None)
-		
+		import pdb; pdb.set_trace()
 		if form.is_valid():
 			recipe = form.save(commit=False)
 			recipe.author = request.user
 			recipe.save()
 			for tag in tags: recipe.tag.add(tag)
-			for item in ingredients: recipe.ingredients.add(item)
+			for item in ingredients: recipe.ingredients.add(item.id)
 			return redirect('index')
 	else:
 		form = RecipeForm()
@@ -51,20 +52,29 @@ def get_tags(request):
 	return tags
 
 def recipe_change(request, id):
+	# import pdb; pdb.set_trace()
 	recipe = Recipe.objects.get(id=id)
-	# ingredients = get_ingredients(request)
-	# tags = get_tags(request)
-	form = RecipeForm(instance=recipe, files=request.FILES or None)
-	tag_ids = []
-	ingredients = []
-	for tag_item in form.instance.tag.all():
-		tag_ids.append(tag_item.id)
-	for item in form.instance.ingredients.all():
-		ingredient = Ingredient.objects.get(id=item.ingredient_id)
-		# import pdb; pdb.set_trace()
-		ingredients.append({'id': ingredient.id, 'name': ingredient.name, 'quantity': item.quantity, 'units': ingredient.units})
+	if request.method == 'POST':
+		ingredients = get_ingredients(request)
+		tags = get_tags(request)
+		form = RecipeForm(request.POST, instance=recipe, files=request.FILES or None)
+		if form.is_valid():
+			recipe = form.save(commit=False)
+			recipe.author = request.user
+			recipe.save()
+			recipe.tag.clear()
+			recipe.ingredients.clear()
 
-	return render(request, 'formChangeRecipe.html', {'form': form, 'tags': tag_ids, 'ingredients': ingredients})
+			for tag in tags: recipe.tag.add(tag)
+			for item in ingredients: recipe.ingredients.add(item)
+			# Recipe.objects.get(id=id).update(field1='some value')
+			return redirect('index')
+	
+	
+	tags = [tag.id for tag in recipe.taglist]
+	ingredients = recipe.ingredientlist
+	form = RecipeForm(instance=recipe)
+	return render(request, 'formChangeRecipe.html', {'form': form, 'recipe': recipe, 'tags': tags, 'ingredients': ingredients})
 
 def recipe_detail(request, id):
 	recipe = Recipe.objects.get(id=id)
@@ -72,7 +82,7 @@ def recipe_detail(request, id):
 	# tags = get_tags(request)
 	# form = RecipeForm(instance=recipe, files=request.FILES or None)
 	# tag_ids = []
-	# ingredients = []
+	ingredients = recipe.ingredientlist
 	# for tag_item in form.instance.tag.all():
 	# 	tag_ids.append(tag_item.id)
 	# for item in form.instance.ingredients.all():
@@ -80,7 +90,7 @@ def recipe_detail(request, id):
 	# 	# import pdb; pdb.set_trace()
 	# 	ingredients.append({'id': ingredient.id, 'name': ingredient.name, 'quantity': item.quantity, 'units': ingredient.units})
 
-	return render(request, 'singlePage.html', {'recipe': recipe})
+	return render(request, 'singlePage.html', {'recipe': recipe, 'ingredients': ingredients})
 
 from django.contrib import messages
 from django.http import JsonResponse
@@ -92,6 +102,7 @@ def favourites(request):
 	return render(request, 'favorite.html', {'recipes': recipes})
 
 class FavouritesView(View):
+	http_method_names = ['get', 'post', 'put', 'delete']
 	def get(self, request):
 		import pdb; pdb.set_trace()
 		# cart = Cart(request)

@@ -26,11 +26,7 @@ class RecipeForm(ModelForm):
     #         # a list of primary key for the selected data.
     #         initial['tag'] = [t.pk for t in kwargs['instance'].tag.all()]
 
-    #     forms.ModelForm.__init__(self, *args, **kwargs)
 
-    # def __init__(self, *args, **kwargs):
-    #     super(RecipeForm, self).__init__(*args, **kwargs)
-    #     self.fields['tag'].choices = [(e.id, e.tag_name) for e in Tag.objects.all()]
 
     class Meta:
         model = Recipe

@@ -23,7 +23,7 @@ class RecipeIngredient(models.Model):
 class Recipe(models.Model):
     title = models.CharField(max_length=64)
     author = models.ForeignKey(User, related_name="recipe_user", on_delete=models.CASCADE)
-    image = models.ImageField(blank=True)   #  add default picture
+    image = models.ImageField(upload_to='media/', blank=True)   #  add default picture
     description = models.TextField()
     ingredients = models.ManyToManyField(RecipeIngredient)
     tag = models.ManyToManyField(Tag)
@@ -38,6 +38,10 @@ class Recipe(models.Model):
     @property
     def taglist(self):
         return list(self.tag.all())
+
+    @property
+    def ingredientlist(self):
+        return list(self.ingredients.all())
 
 
 class Follow(models.Model):
