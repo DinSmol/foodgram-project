@@ -9,7 +9,7 @@ class TagAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Tag, TagAdmin)
-admin.site.register(Follow)
+
 
 class RecipeAdmin(admin.ModelAdmin):
     raw_id_fields = ("ingredients", "tag", "favourite")
@@ -27,3 +27,5 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
 
 
 admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
+
+admin.site.register(Follow)

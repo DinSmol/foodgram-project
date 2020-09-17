@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'orders',
+    'sorl.thumbnail',
     'cart',
     'users',
     'ingredients',
@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.flatpages",
+    'django.contrib.sites',
     'rest_framework',
-    # 'debug_toolbar',
+    
 ]
 
 MIDDLEWARE = [
@@ -54,7 +56,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
@@ -131,9 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "static/pages"),
@@ -147,14 +146,12 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# INTERNAL_IPS = [
-#     "127.0.0.1",
-# ]
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 CART_SESSION_ID = 'cart'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+SITE_ID = 1

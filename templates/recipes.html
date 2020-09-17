@@ -1,28 +1,49 @@
 {% extends "indexAuth.html" %}
 {% load static %}
 {% block content %}
+{% load user_filters %}
 <div class="main__header">
     <h1 class="main__title">Рецепты</h1>
     <ul class="tags">
-        <form action='.' method="POST"></form>
         <li class="tags__item">
-            <input type="checkbox" id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" name="checks[]" href="/"/>
-            <span class="tags__label">Завтрак</span>
+            <input
+                                type="checkbox"
+                                name="tag_cb"
+                                value="{{ tag_id }}"
+                                id="breakfast"
+                                onclick="onClickHandler()"
+                                class="tags__checkbox tags__checkbox_style_orange" 
+                                {{ filters.breakfast }}>
+                                <label for="dinner" class="tags__label">Завтрак</label>
         </li>
         <li class="tags__item">
-            <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" name="checks[]" href="/"></a>
-            <span for="lunch" class="tags__label">Обед</span>
+            <input
+                                type="checkbox"
+                                name="tag_cb"
+                                value="{{ tag_id }}"
+                                id="lunch"
+                                onclick="onClickHandler()"
+                                class="tags__checkbox tags__checkbox_style_green" 
+                                {{ filters.lunch }}>
+                                <label for="dinner" class="tags__label">Обед</label>
         </li>
         <li class="tags__item">
-            <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" name="checks[]" href="#"></a>
-            <label for="dinner" class="tags__label">Ужин</label>
+            <input
+                                type="checkbox"
+                                name="tag_cb"
+                                value="{{ tag_id }}"
+                                id="dinner"
+                                onclick="onClickHandler()"
+                                class="tags__checkbox tags__checkbox_style_purple" 
+                                {{ filters.dinner }}>
+                                <label for="dinner" class="tags__label">Ужин</label>
         </li>
         
-        </form>
     </ul>
 </div>
 <div class="card-list">
     {% include "card.html" with recipes=recipes %}  
 </div>
+
 
 {% endblock %}

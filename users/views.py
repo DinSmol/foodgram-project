@@ -1,42 +1,80 @@
-from django.shortcuts import render
-from users.forms import LoginForm, UserEditForm, UserRegistrationForm
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout as django_logout
-from recipes.models import Recipe, Follow
-from ingredients.models import Ingredient
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.utils.datastructures import MultiValueDictKeyError
+from recipes.models import Follow, Recipe
+from users.forms import LoginForm, UserEditForm, UserRegistrationForm
 
 
 def index(request):
-    if request.method == "POST":
-        values = request.POST.getlist('checked[]')
-        import pdb; pdb.set_trace()
+    request.GET = request.GET.copy()
+    filters = {
+        'breakfast': 'checked',
+        'lunch': 'checked',
+        'dinner': 'checked'
+        }
+    try:
+        filters['breakfast'] = (
+            'checked' if request.GET['breakfast'] == '1' else ''
+        )
+        filters['lunch'] = 'checked' if request.GET['lunch'] == '1' else ''
+        filters['dinner'] = 'checked' if request.GET['dinner'] == '1' else ''
+    except MultiValueDictKeyError:
+        pass
+
+    recipes = filtered_recipes(filters)
+    paginator = Paginator(recipes, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    request.GET.clear()
+
+    context = {
+        'filters': filters,
+        'recipes': page,
+        'paginator': paginator
+        }
+    return render(request, 'recipes.html', context)
+
+
+def filtered_recipes(filters):
+    res = []
     recipes = Recipe.objects.all().order_by('-created')
-    # import pdb; pdb.set_trace()
-    return render(request, 'recipes.html', {'recipes': recipes})
+    for recipe in recipes:
+        for tag in recipe.taglist:
+            if recipe not in res:
+                if (
+                    tag.id == 1 and filters['breakfast'] == 'checked'
+                    or tag.id == 2 and filters['lunch'] == 'checked'
+                    or tag.id == 3 and filters['dinner'] == 'checked'
+                ):
+                    res.append(recipe)
+    return res
+
 
 def user_profile(request, id):
     author = User.objects.get(id=id)
     recipes = Recipe.objects.filter(author=author).order_by('-created')
-    # import pdb; pdb.set_trace()
-    return render(request, 'authorRecipe.html', {'recipes': recipes, 'author': author})
-# def index(request):
-#     ingredients = Ingredient.objects.all()
-#     return  {'ingredients': ingredients}
+    return render(
+        request,
+        'authorRecipe.html',
+        {'recipes': recipes, 'author': author}
+    )
+
 
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            user = authenticate(request,
-            username=cd['username'],
-            password=cd['password'])
+            user = authenticate(
+                request,
+                username=cd['username'],
+                password=cd['password'])
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -49,10 +87,12 @@ def user_login(request):
         form = LoginForm()
     return render(request, 'authForm.html', {'form': form})
 
+
 @login_required
 def logout(request):
     django_logout(request)
     return redirect('index')
+
 
 @login_required
 def change_password(request):
@@ -65,37 +105,16 @@ def change_password(request):
             messages.error(request, 'Error updating your profile')
     else:
         user_form = UserEditForm()
-    return render(request,'changePassword.html', {'user_form': user_form})
+    return render(request, 'changePassword.html', {'user_form': user_form})
 
-def follows(request):
-    # import pdb; pdb.set_trace()
-    res = {}
-    recipes = []
-    user = request.user
-    follow = Follow.objects.filter(user=user)
-    print(follow)
-    if follow:
-        authors = [item.author for item in follow]
-        # # import pdb; pdb.set_trace()
-        # for author in authors:
-        #     res[author] = Recipe.objects.filter(author=author)
-        #     recipes.append(res)
-        #     res = {}
-        
-        return render(request, 'myFollow.html', {'authors': authors})
-    return render(request, 'myFollow.html') 
 
 def user_create(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
-        import pdb; pdb.set_trace()
         if form.is_valid():
             user = form.save(commit=False)
-            # cd = form.cleaned_data
-            # user = authenticate(request,
-            # username=cd['username'],
-            # password=cd['password'])
-            print(f'user: {user}')
+            user.save()
+
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -108,10 +127,15 @@ def user_create(request):
         form = LoginForm()
     return render(request, 'reg.html')
 
-def cart(request):
-    return render(request, 'reg.html')
+
+def follows(request):
+    user = request.user
+    follow = Follow.objects.filter(user=user)
+    if follow:
+        authors = [item.author for item in follow]
+        return render(request, 'myFollow.html', {'authors': authors})
+    return render(request, 'myFollow.html')
+
 
 def shoplist(request):
     return render(request, 'shopList.html')
-
-

@@ -1,4 +1,3 @@
-from decimal import Decimal
 from django.conf import settings
 from recipes.models import Recipe
 
@@ -30,7 +29,6 @@ class Cart(object):
         if product_id in self.cart:
             del self.cart[product_id]
         self.save()
-        
 
     def __iter__(self):
         product_ids = self.cart.keys()

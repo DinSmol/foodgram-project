@@ -18,13 +18,25 @@
     <div class="card-list card-list_column">
         <ul class="shopping-list">
             {% include 'shopList_item.html' %}
-        </ul>
-        <a href="#"><button class="button button_style_blue">Скачать список</button></a>
+		</ul>
+		<form action="{% url 'cart:cart_export' %}" method="post">
+			{% csrf_token %}
+                <button class="button button_style_blue">Скачать список</button>
+		</form>
 
 
     </div>
 </main>
 {% include 'footer.html' %}
+<!-- 
+<script>
+	setTimeout(function onClickHandler(){
+
+		var url = '';    
+		window.location.href = url;
+		
+		}, false);
+	</script> -->
 <script src="{% static 'js/config/config.js' %}"></script>
 <script src="{% static 'js/components/Header.js' %}"></script>
 <script src="{% static 'js/components/ShopList.js' %}"></script>

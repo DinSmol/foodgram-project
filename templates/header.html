@@ -4,11 +4,17 @@
             {% with total_items=cart|length %}
             {% if user.is_authenticated %}
             <ul class="nav__items list">
-                <li class="nav__item nav__item_active"><a href="/" class="nav__link link">Рецепты</a></li>
-                <li class="nav__item"><a href="/follows" class="nav__link link">Мои подписки</a></li>
-                <li class="nav__item"><a href="/new" class="nav__link link">Создать рецепт</a></li>
-                <li class="nav__item"><a href="/favourites" class="nav__link link">Избранное</a></li>
-                <li class="nav__item"><a href="/purchases" class="nav__link link">Список покупок</a> <span class="badge badge_style_blue nav__badge" id="counter">{{ total_items }}</span></li>
+
+				<li class={% if request.path == '/' %} 'nav__item nav__item_active' {% else %} 'nav__item' {% endif %}>
+					<a href="/" class="nav__link link">Рецепты</a></li>
+				<li class={% if request.path == '/follows/' %} 'nav__item nav__item_active' {% else %} 'nav__item' {% endif %}>
+					<a href="/follows" class="nav__link link">Мои подписки</a></li>
+				<li class={% if request.path == '/new/' %} 'nav__item nav__item_active' {% else %} 'nav__item' {% endif %}>
+					<a href="/new" class="nav__link link">Создать рецепт</a></li>
+				<li class={% if request.path == '/favourites/' %} 'nav__item nav__item_active' {% else %} 'nav__item' {% endif %}>
+					<a href="/favourites" class="nav__link link">Избранное</a></li>
+				<li class={% if request.path == '/purchases/' %} 'nav__item nav__item_active' {% else %} 'nav__item' {% endif %}>
+					<a href="/purchases" class="nav__link link">Список покупок</a> <span class="badge badge_style_blue nav__badge" id="counter">{{ total_items }}</span></li>
 
             </ul>
             <ul class="nav__items list">
@@ -22,7 +28,7 @@
             </ul>
             <ul class="nav__items list">
                 <li class="nav__item"><a href="{% url 'login' %}" class="nav__link link">Войти</a></li>
-                <li class="nav__item"><a href="{% url 'user_create' %}" class="button button_style_blue">Создать аккаунт</a></li>
+                <li class="nav__item"><a href="{% url 'users:create' %}" class="button button_style_blue">Создать аккаунт</a></li>
             </ul>
             {% endif %}
             {% endwith %}

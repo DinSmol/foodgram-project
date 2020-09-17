@@ -1,8 +1,11 @@
 {% load static %}
+{% load thumbnail %}
 {% for item in cart %}
 <li class="shopping-list__item" data-id={{ item.id }}>
     <div class="recipe recipe_reverse">
-        <img src="./images/testCardImg.png" alt="какой-то текст" class="recipe__image recipe__image_big">
+        {% thumbnail item.image "50x50" crop="center" upscale=True as im %}
+            <img src="{{ im.url }}" class="recipe__image">
+        {% endthumbnail %}
         <h3 class="recipe__title">"{{ item.title }}"</h3>
         <p class="recipe__text"><span class="icon-time"></span> {{ item.cooking_duration }} мин. </p>
     </div>

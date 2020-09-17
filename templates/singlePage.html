@@ -1,4 +1,5 @@
 {% load static %}
+{% load thumbnail %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,7 +14,10 @@
     {% include 'header.html' %}
     <main class="main container">
         <div class="single-card" data-id={{ recipe.id }} data-author={{ recipe.author.id }}>
-            <img src="{% static '/images/testCardImg.png' %}" alt="какой-то текст" class="single-card__image">
+            {% thumbnail recipe.image "450x450" crop="center" upscale=True as im %}
+            <a href="recipes/{{ item.id }}" class="link">{% if recipe.image %}<img src="{{ im.url }}">
+            {% endif %}</a>
+            {% endthumbnail %}
             <div class="single-card__info">
                 <div class="single-card__header-info">
                     <h1 class="single-card__title">{{ recipe.title }}</h1>
@@ -24,9 +28,6 @@
                 </div>
                 <ul class="single-card__items">
                     {% include "tags.html" with tags=recipe.taglist %} 
-                    <!-- <li class="single-card__item"><span class="badge badge_style_green">Обед</span></li>
-                    <li class="single-card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-                    <li class="single-card__item"><span class="badge badge_style_purple">Ужин</span></li> -->
                 </ul>
                 <div class="single-card__items single-card__items_column">
                     <p class="single-card__text"><span class="icon-time"></span> {{ recipe.cooking_duration}} мин.</p>
