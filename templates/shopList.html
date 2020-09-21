@@ -1,20 +1,9 @@
+{% extends "indexAuth.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Список покупок</title>
-    <link rel="stylesheet" href="{% static 'pages/shopList.css' %}">
-</head>
-<body class="body">
-    {% include 'header.html' %}
-<main class="main container">
-    <div class="main__header">
-        <h1 class="main__title">Список покупок</h1>
-    </div>
+{% block title %}Список покупок{% endblock %}
+	{% block maintitle %}Список покупок{% endblock %}
+	{% block style %}"{% static 'pages/shopList.css' %}"{% endblock %}
+	{% block content %}
     <div class="card-list card-list_column">
         <ul class="shopping-list">
             {% include 'shopList_item.html' %}
@@ -23,20 +12,8 @@
 			{% csrf_token %}
                 <button class="button button_style_blue">Скачать список</button>
 		</form>
-
-
     </div>
-</main>
-{% include 'footer.html' %}
-<!-- 
-<script>
-	setTimeout(function onClickHandler(){
-
-		var url = '';    
-		window.location.href = url;
-		
-		}, false);
-	</script> -->
+	{% endblock %}
 <script src="{% static 'js/config/config.js' %}"></script>
 <script src="{% static 'js/components/Header.js' %}"></script>
 <script src="{% static 'js/components/ShopList.js' %}"></script>

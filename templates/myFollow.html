@@ -1,21 +1,10 @@
+{% extends "indexAuth.html" %}
 {% load static %}
 {% load thumbnail %}
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Мои подписки</title>
-    <link rel="stylesheet" href="{% static 'pages/myFollow.css' %}">
-</head>
-<body class="body">
-    {% include 'header.html' %}
-<main class="main container">
-    <div class="main__header">
-        <h1 class="main__title">Мои подписки</h1>
-    </div>
+	{% block title %}Мои подписки{% endblock %}
+	{% block maintitle %}Мои подписки{% endblock %}
+	{% block style %}"{% static 'pages/myFollow.css' %}"{% endblock %}
+	{% block content %}
     {% for author in authors %}
     <div class="card-list">
         <div class="card-user" data-id={{ author.id }}>
@@ -24,7 +13,7 @@
         </div>
         <div class="card-user__body">
             <ul class="card-user__items">
-                {% for recipe in author.recipe_user.all %}
+                {% for recipe in author.user_recipes.all %}
                 {% thumbnail recipe.image "50x50" crop="center" upscale=True as im %}
                 <li class="card-user__item">
                     <div class="recipe">
@@ -45,10 +34,8 @@
         </div>
     </div>
     </div>
-    {% endfor %}
-    {% include 'nav.html' %}
-</main>
-{% include 'footer.html' %}
+	{% endfor %}
+	{% endblock %}
 <script src="{% static 'js/components/MainCards.js' %}"></script>
 <script src="{% static 'js/components/MyFollow.js' %}"></script>
 <script src="{% static 'js/config/config.js' %}"></script>

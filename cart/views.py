@@ -1,5 +1,6 @@
 import csv
 import json
+from io import StringIO
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -34,22 +35,22 @@ def cart_detail(request):
 def cart_export(request):
     cart = Cart(request)
     res = cart.cart.values()
-    with open('shoplist.csv', 'w', newline="") as myfile:
-        wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-        for item in res:
-            products = item.ingredientlist
-            wr.writerows([[item.title]])
-            for product in products:
-                wr.writerows(
-                    [[product.ingredient.name +
-                    '-' + str(product.quantity) +
-                    product.ingredient.units]]
-                )
+    new_csvfile = StringIO.StringIO()
 
-    with open('shoplist.csv') as myfile:
-        resp = HttpResponse(myfile, content_type='text/csv')
-        resp['Content-Disposition'] = 'attachment; filename=shoplist.csv'
-        return resp
+    wr = csv.writer(new_csvfile, quoting=csv.QUOTE_ALL)
+    for item in res:
+        products = item.ingredientlist
+        wr.writerows([[item.title]])
+        for product in products:
+            wr.writerows(
+                [[product.ingredient.name +
+                '-' + str(product.quantity) +
+                product.ingredient.units]]
+            )
+
+    response = HttpResponse(new_csvfile.getvalue(), content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=stock.csv'
+    return response
 
 
 def purchases(request, *args, **kwargs):

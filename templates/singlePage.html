@@ -1,18 +1,9 @@
+{% extends "indexAuth.html" %}
 {% load static %}
 {% load thumbnail %}
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ recipe.title }}</title>
-    <link rel="stylesheet" href="{% static '/pages/single.css' %}">
-</head>
-<body class="body">
-    {% include 'header.html' %}
-    <main class="main container">
+	{% block title %}{{ recipe.title }}{% endblock %}
+	{% block style %}"{% static 'pages/single.css' %}"{% endblock %}
+	{% block content %}
         <div class="single-card" data-id={{ recipe.id }} data-author={{ recipe.author.id }}>
             {% thumbnail recipe.image "450x450" crop="center" upscale=True as im %}
             <a href="recipes/{{ item.id }}" class="link">{% if recipe.image %}<img src="{{ im.url }}">
@@ -46,7 +37,7 @@
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингридиенты:</h3>
                     <div class="single-card__items single-card__items_column">
-                        {% for item in ingredients %}
+                        {% for item in recipe.ingredientlist %}
                         <p class=" single-card__section-item">{{ item.ingredient.name }} {{item.quantity}} {{item.ingredient.units}}</p>
                         {% endfor %}
                     </div>
@@ -57,9 +48,8 @@
                     
                 </div>
             </div>
-        </div>
-    </main>
-    {% include 'footer.html' %}
+		</div>
+		{% endblock %}
 <script src="{% static '/js/components/Purchases.js' %}"></script>
 <script src="{% static '/js/components/Favorites.js' %}"></script>
 <script src="{% static '/js/components/Subscribe.js' %}"></script>

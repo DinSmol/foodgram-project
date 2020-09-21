@@ -7,7 +7,6 @@ from ingredients.views import Ingredients
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import include
-from ingredients.views import data_upl
 from django.contrib.flatpages import views as flatpages_views
 
 
@@ -51,7 +50,6 @@ urlpatterns = [
     path('follows/', follows, name='follows'),
 
     path('shoplist', cart_detail, name='shoplist'),
-    path('upload/', data_upl, name='data_upl'),
     ]
 
 urlpatterns += [

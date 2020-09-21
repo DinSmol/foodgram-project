@@ -37,12 +37,6 @@ def recipe_delete(request, id):
     return redirect('index')
 
 
-def purchases(request):
-    id = json.loads(request.body)['id']
-    recipe = get_object_or_404(Recipe, id=id)
-    return render(request, 'shopList.html')
-
-
 def get_tags(request):
     tags = []
     for key in request.POST.getlist('tag'):
@@ -91,17 +85,16 @@ def recipe_change(request, id):
 
 def recipe_detail(request, id):
     recipe = get_object_or_404(Recipe, id=id)
-    ingredients = recipe.ingredientlist
     return render(
         request,
         'singlePage.html',
-        {'recipe': recipe, 'ingredients': ingredients}
+        {'recipe': recipe}
     )
 
 
 def favourites(request):
     user = request.user
-    recipes = user.fav_recipes.all()
+    recipes = user.user_recipes.all()
     return render(request, 'favorite.html', {'recipes': recipes})
 
 
@@ -117,7 +110,7 @@ class FavouritesView(View):
         return JsonResponse({'success': True})
 
     def delete(self, request, id):
-        recipe = get_object_or_404Recipe, id=id)
+        recipe = get_object_or_404(Recipe, id=id)
         recipe.favourite.remove(request.user)
         return JsonResponse({'success': True})
 

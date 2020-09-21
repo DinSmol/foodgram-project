@@ -1,21 +1,10 @@
+{% extends "indexAuth.html" %}
 {% load static %}
 {% load user_filters %}
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Редактирование рецепта</title>
-    <link rel="stylesheet" href="{% static '/pages/form.css' %}">
-</head>
-<body class="body">
-    {% include 'header.html' %}
-<main class="main container">
-    <div class="main__header">
-        <h1 class="main__title">Редактирование рецепта</h1>
-    </div>
+{% block title %}Редактирование рецепта{% endblock %}
+	{% block maintitle %}Редактирование рецепта{% endblock %}
+	{% block style %}"{% static '/pages/form.css' %}"{% endblock %}
+    {% block content %}
     <div class="form-container">
         <form class="form" method='POST'>
 			<div class="form__group">
@@ -101,16 +90,13 @@
             <div class="form__footer">
                 {% csrf_token %}
                 <input type="hidden" name="_method" value="delete">
-                <button class="button button_style_blue">Сохранить</button> <a style="margin-left: 2.5em" href="terminate" class="form__ingredient-link">Удалить</a>
+                <button class="button button_style_blue">Сохранить</button> <a style="margin-left: 2.5em" href={% url 'recipe_delete'%} class="form__ingredient-link">Удалить</a>
             </div>
         </form>
     </div>
-</main>
-{% include 'footer.html' %}
+	{% endblock %}
 <script src="{% static '/js/config/config.js' %}"></script>
 <script src="{% static '/js/components/Header.js' %}"></script>
 <script src="{% static '/js/utils/debouncing.js' %}"></script>
 <script src="{% static '/js/api/Api.js' %}"></script>
 <script src="{% static 'formRecipe.js' %}"></script>
-</body>
-</html>
