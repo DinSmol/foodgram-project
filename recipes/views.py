@@ -32,23 +32,21 @@ def new(request):
 
 
 def recipe_delete(request, id):
-    recipe = Recipe.objects.get(id=id)
-    if recipe.author == request.user or request.user.is_superuser:
-        recipe.delete()
+    recipe = get_object_or_404(Recipe, id=id)
+    recipe.delete()
     return redirect('index')
 
 
 def purchases(request):
-    id = json.loads((request.body).decode('utf8'))['id']
-    lst = Recipe.objects.get(id=id)
-    print(lst.title)
+    id = json.loads(request.body)['id']
+    recipe = get_object_or_404(Recipe, id=id)
     return render(request, 'shopList.html')
 
 
 def get_tags(request):
     tags = []
     for key in request.POST.getlist('tag'):
-        tags.append(Tag.objects.get(id=int(key)))
+        tags.append(get_object_or_404(Tag, id=int(key)))
     return tags
 
 
@@ -92,7 +90,7 @@ def recipe_change(request, id):
 
 
 def recipe_detail(request, id):
-    recipe = Recipe.objects.get(id=id)
+    recipe = get_object_or_404(Recipe, id=id)
     ingredients = recipe.ingredientlist
     return render(
         request,
@@ -119,26 +117,23 @@ class FavouritesView(View):
         return JsonResponse({'success': True})
 
     def delete(self, request, id):
-        recipe = Recipe.objects.get(id=id)
+        recipe = get_object_or_404Recipe, id=id)
         recipe.favourite.remove(request.user)
         return JsonResponse({'success': True})
 
 
 class SubscriptionsView(View):
     def post(self, request):
-        id = json.loads((request.body).decode('utf8'))['id']
+        id = json.loads(request.body)['id']
         user = request.user
-        author = User.objects.get(id=id)
-        follow = Follow.objects.filter(user=user, author=author).exists()
-        if(user != author and follow is False):
-            follow = Follow.objects.create(user=user, author=author)
-            return JsonResponse({'success': True})
+        author = get_object_or_404(User, id=id)
+        follow = Follow.objects.get_or_create(user=user, author=author)
+        return JsonResponse({'success': True})
 
-        return JsonResponse({'success': False})
+
 
     def delete(self, request, id):
         user = request.user
-        author = User.objects.get(id=id)
-        follow = Follow.objects.get(user=user, author=author)
-        follow.delete()
+        author = get_object_or_404(User, id=id)
+        follow = get_object_or_404(Follow, user=user, author=author).delete()
         return JsonResponse({'success': True})

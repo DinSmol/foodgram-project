@@ -27,17 +27,13 @@ def cart_remove(request, product_id):
 
 def cart_detail(request):
     cart = Cart(request)
-    res = []
-    for val in cart.cart.values():
-        res.append(val)
+    res = cart.cart.values()
     return render(request, 'shopList.html', {'cart': res})
 
 
 def cart_export(request):
     cart = Cart(request)
-    res = []
-    for val in cart.cart.values():
-        res.append(Recipe.objects.get(id=val['id']))
+    res = cart.cart.values()
     with open('shoplist.csv', 'w', newline="") as myfile:
         wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
         for item in res:
@@ -59,9 +55,7 @@ def cart_export(request):
 def purchases(request, *args, **kwargs):
     if request.method == 'GET':
         cart = Cart(request)
-        res = []
-        for val in cart.cart.values():
-            res.append(val)
+        res = cart.cart.values()
         return render(request, 'shopList.html', {'cart': res})
 
     if request.method == 'POST':
@@ -69,18 +63,14 @@ def purchases(request, *args, **kwargs):
         cart = Cart(request)
         product = get_object_or_404(Recipe, id=id)
         cart.add(product=product)
-        res = []
-        for val in cart.cart.values():
-            res.append(val)
+        res = cart.cart.values()
         return render(request, 'shopList.html', {'cart': res})
 
     if request.method == 'DELETE':
         id = request.resolver_match.kwargs.get('id')
         cart = Cart(request)
         cart.remove(id)
-        res = []
-        for val in cart.cart.values():
-            res.append(val)
+        res = cart.cart.values()
         return render(request, 'shopList.html', {'cart': res})
 
 
@@ -88,8 +78,8 @@ class PurchasesView(View):
     def get(self, request):
         cart = Cart(request)
         res = []
-        for key in cart.cart.keys():
-            res.append(Recipe.objects.get(id=key))
+        for recipe_id in cart.cart.keys():
+            res.append(get_object_or_404(Recipe, id=recipe_id))
         return render(request, 'shopList.html', {'cart': res})
 
     def post(self, request, id):

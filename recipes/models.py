@@ -24,7 +24,7 @@ class Recipe(models.Model):
     title = models.CharField(max_length=64)
     author = models.ForeignKey(
         User,
-        related_name="recipe_user",
+        related_name="user_recipes",
         on_delete=models.CASCADE
     )
     image = models.ImageField(upload_to='recipes/', blank=True)
@@ -32,11 +32,11 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(RecipeIngredient)
     tag = models.ManyToManyField(Tag)
     cooking_duration = models.IntegerField()
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     created = models.DateTimeField(auto_now_add=True)
     favourite = models.ManyToManyField(
         User,
-        related_name="fav_recipes",
+        related_name="user_favourites",
         blank=True
     )
 
@@ -56,10 +56,10 @@ class Follow(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="follower"
+        related_name="user_followers"
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="following"
+        related_name="user_followings"
     )

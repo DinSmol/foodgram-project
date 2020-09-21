@@ -8,9 +8,6 @@ class TagAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-admin.site.register(Tag, TagAdmin)
-
-
 class RecipeAdmin(admin.ModelAdmin):
     raw_id_fields = ("ingredients", "tag", "favourite")
     list_display = ("id", "title")
@@ -18,14 +15,12 @@ class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-admin.site.register(Recipe, RecipeAdmin)
-
-
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = ("id", "quantity")
     empty_value_display = '-пусто-'
 
 
-admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
-
 admin.site.register(Follow)
+admin.site.register(Tag, TagAdmin)
+admin.site.register(Recipe, RecipeAdmin)
+admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
