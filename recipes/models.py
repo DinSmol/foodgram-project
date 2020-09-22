@@ -51,6 +51,9 @@ class Recipe(models.Model):
     def ingredientlist(self):
         return list(self.ingredients.all())
 
+    class Meta:
+        ordering = ('-created', )
+
 
 class Follow(models.Model):
     user = models.ForeignKey(

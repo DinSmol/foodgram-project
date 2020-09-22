@@ -1,0 +1,7 @@
+add app follow
+add app subscription
+
+change filtration
+add pagination
+add filtration
+fix url in templates

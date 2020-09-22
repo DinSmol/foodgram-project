@@ -7,8 +7,24 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.datastructures import MultiValueDictKeyError
+from django.shortcuts import get_object_or_404
+
 from recipes.models import Follow, Recipe
-from users.forms import LoginForm, UserEditForm, UserRegistrationForm
+from recipes.utils import filtered_recipes
+from users.forms import CreationForm
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.shortcuts import redirect
+from .forms import CreationForm
+
+
+class SignUp(CreateView):
+        form_class = CreationForm
+        success_url = "/auth/login/"
+        template_name = "signup.html"
 
 
 def index(request):
@@ -41,51 +57,14 @@ def index(request):
     return render(request, 'recipes.html', context)
 
 
-def filtered_recipes(filters):
-    res = []
-    recipes = Recipe.objects.all().order_by('-created')
-    for recipe in recipes:
-        for tag in recipe.taglist:
-            if recipe not in res:
-                if (
-                    tag.id == 1 and filters['breakfast'] == 'checked'
-                    or tag.id == 2 and filters['lunch'] == 'checked'
-                    or tag.id == 3 and filters['dinner'] == 'checked'
-                ):
-                    res.append(recipe)
-    return res
-
-
 def user_profile(request, id):
-    author = User.objects.get(id=id)
-    recipes = Recipe.objects.filter(author=author).order_by('-created')
+    author = get_object_or_404(User, id=id)
+    recipes = Recipe.objects.filter(author=author)
     return render(
         request,
         'authorRecipe.html',
         {'recipes': recipes, 'author': author}
     )
-
-
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(
-                request,
-                username=cd['username'],
-                password=cd['password'])
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect('index')
-            else:
-                return HttpResponse('Disabled account')
-        else:
-            return HttpResponse('Invalid login')
-    else:
-        form = LoginForm()
-    return render(request, 'authForm.html', {'form': form})
 
 
 @login_required

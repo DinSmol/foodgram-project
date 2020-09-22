@@ -8,6 +8,7 @@ from ingredients.views import get_ingredients
 from recipes.models import Follow, Recipe, Tag
 
 from .forms import RecipeForm
+from .utils import get_tags, filtered_recipes
 
 
 def new(request):
@@ -37,15 +38,8 @@ def recipe_delete(request, id):
     return redirect('index')
 
 
-def get_tags(request):
-    tags = []
-    for key in request.POST.getlist('tag'):
-        tags.append(get_object_or_404(Tag, id=int(key)))
-    return tags
-
-
 def recipe_change(request, id):
-    recipe = Recipe.objects.get(id=id)
+    recipe = get_object_or_404(Recipe, id=id)
 
     if request.method == 'POST':
         ingredients = get_ingredients(request)
@@ -92,16 +86,46 @@ def recipe_detail(request, id):
     )
 
 
-def favourites(request):
-    user = request.user
-    recipes = user.user_recipes.all()
-    return render(request, 'favorite.html', {'recipes': recipes})
+# def favourites(request):
+#     user = request.user
+#     recipes = user.user_recipes.all()
+#     return render(request, 'favorite.html', {'recipes': recipes})
 
 
 class FavouritesView(View):
     http_method_names = ['get', 'post', 'delete']
 
     def get(self, request):
+        user = request.user
+        recipes = user.user_recipes.all()
+
+        request.GET = request.GET.copy()
+        filters = {
+            'breakfast': 'checked',
+            'lunch': 'checked',
+            'dinner': 'checked'
+            }
+        try:
+            filters['breakfast'] = (
+                'checked' if request.GET['breakfast'] == '1' else ''
+            )
+            filters['lunch'] = 'checked' if request.GET['lunch'] == '1' else ''
+            filters['dinner'] = 'checked' if request.GET['dinner'] == '1' else ''
+        except MultiValueDictKeyError:
+            pass
+
+        recipes = filtered_recipes(filters)
+        paginator = Paginator(recipes, 6)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        request.GET.clear()
+
+        context = {
+            'filters': filters,
+            'recipes': page,
+            'paginator': paginator
+            }
+        return render(request, 'recipes.html', context)
         return render(request, 'favorite.html')
 
     def post(self, request, id):

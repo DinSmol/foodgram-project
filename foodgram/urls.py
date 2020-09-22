@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from users.views import index, user_login, follows, logout
+from users.views import index, follows
 from cart.views import cart_detail, PurchasesView
 from recipes import views
 from ingredients.views import Ingredients
@@ -13,10 +13,8 @@ from django.contrib.flatpages import views as flatpages_views
 urlpatterns = [
     path('', index, name='index'),
     path('admin/', admin.site.urls),
-    path('login/', user_login, name='login'),
-    path('logout/', logout, name='logout'),
-
-    path('users/', include('users.urls', namespace='users')),
+    path("auth/", include("users.urls")),
+    path("auth/", include("django.contrib.auth.urls")),
 
     path('cart/', include('cart.urls', namespace='cart')),
 
@@ -38,7 +36,7 @@ urlpatterns = [
         name='subscriptions_delete'
     ),
 
-    path('favourites/', views.favourites, name='favourites'),
+    path('favourites/', views.FavouritesView.as_view(), name='favourites'),
     path(
         'favorites/<int:id>',
         views.FavouritesView.as_view(),
