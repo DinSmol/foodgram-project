@@ -138,8 +138,6 @@ class SubscriptionsView(View):
         follow = Follow.objects.get_or_create(user=user, author=author)
         return JsonResponse({'success': True})
 
-
-
     def delete(self, request, id):
         user = request.user
         author = get_object_or_404(User, id=id)
