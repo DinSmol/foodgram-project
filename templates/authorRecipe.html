@@ -6,20 +6,21 @@
 	{% block content %}
         <div class="author-subscribe" data-author={{ author.id }}>
             {% csrf_token %}
-            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" 
+                {% if follow.author != author %}data-out>Подписаться на автора{% else %}>Отписаться от автора{% endif %}</button></p>
         </div>
         <div class="card-list" >
             {% for item in recipes %}
             <div class="card" data-id={{ item.id }}>
-                <a href="recipes/{{ item.id }}" class="link"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
+                <a href="{% url 'recipes:recipe_detail' item.id %}" class="link"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
                 <div class="card__body">
-                    <a class="card__title link" href="recipes/{{ item.id }}" target="_blank">{{ item.title }}</a>
+                    <a class="card__title link" href="{% url 'recipes:recipe_detail' item.id %}" target="_blank">{{ item.title }}</a>
                     <ul class="card__items">
                         {% include "tags.html" with tags=item.taglist %}  
                     </ul>
                     <div class="card__items card__items_column">
                         <p class="card__text"><span class="icon-time"></span>{{ item.cooking_duration }} мин.</p>
-                        <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black">{{ item.author }}</a></p>
+                        <p class="card__text"><span class="icon-user"></span> <a style="color: black">{{ item.author }}</a></p>
                     </div>
                 </div>
                 <div class="card__footer">
@@ -31,6 +32,7 @@
             {% endfor %} 
     </div>
         {% endblock %}
+        {% block script %}
   <script src="{% static '/js/components/MainCards.js' %}"></script>
 
   <script src="{% static '/js/components/Purchases.js' %}"></script>
@@ -43,3 +45,4 @@
 
   <script src="{% static '/js/api/Api.js' %}"></script>
   <script src="{% static 'authorRecipe.js' %}"></script>
+  {% endblock %}

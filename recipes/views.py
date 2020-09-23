@@ -5,10 +5,17 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View
 from ingredients.views import get_ingredients
-from recipes.models import Follow, Recipe, Tag
+from recipes.models import Follow, Recipe
+from django.core.paginator import Paginator
+from cart.utils import get_cart_ids
 
 from .forms import RecipeForm
-from .utils import get_tags, filtered_recipes
+from .utils import (
+    get_tags,
+    unique_slug_generator,
+    get_filters,
+    get_favourites
+    )
 
 
 def new(request):
@@ -20,6 +27,7 @@ def new(request):
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.author = request.user
+            recipe.slug = unique_slug_generator(recipe)
             recipe.save()
             for tag in tags:
                 recipe.tag.add(tag)
@@ -86,47 +94,30 @@ def recipe_detail(request, id):
     )
 
 
-# def favourites(request):
-#     user = request.user
-#     recipes = user.user_recipes.all()
-#     return render(request, 'favorite.html', {'recipes': recipes})
-
-
 class FavouritesView(View):
     http_method_names = ['get', 'post', 'delete']
 
     def get(self, request):
         user = request.user
-        recipes = user.user_recipes.all()
-
-        request.GET = request.GET.copy()
-        filters = {
-            'breakfast': 'checked',
-            'lunch': 'checked',
-            'dinner': 'checked'
-            }
-        try:
-            filters['breakfast'] = (
-                'checked' if request.GET['breakfast'] == '1' else ''
-            )
-            filters['lunch'] = 'checked' if request.GET['lunch'] == '1' else ''
-            filters['dinner'] = 'checked' if request.GET['dinner'] == '1' else ''
-        except MultiValueDictKeyError:
-            pass
-
-        recipes = filtered_recipes(filters)
+        filters = get_filters(request)
+        tag_names = [k for k, v in filters.items() if v == 'checked']
+        cart_ids = get_cart_ids(request)
+        favourite_ids = get_favourites(request)
+        recipes = user.user_favourites.filter(
+            tag__tag_name_eng__in=tag_names).distinct()
         paginator = Paginator(recipes, 6)
         page_number = request.GET.get('page')
         page = paginator.get_page(page_number)
         request.GET.clear()
 
         context = {
+            'favourite_ids': favourite_ids,
+            'cart_ids': cart_ids,
             'filters': filters,
             'recipes': page,
             'paginator': paginator
             }
-        return render(request, 'recipes.html', context)
-        return render(request, 'favorite.html')
+        return render(request, 'favorite.html', context)
 
     def post(self, request, id):
         recipe = get_object_or_404(Recipe, id=id)

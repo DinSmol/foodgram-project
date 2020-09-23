@@ -5,37 +5,41 @@
 	{% block maintitle %}Мои подписки{% endblock %}
 	{% block style %}"{% static 'pages/myFollow.css' %}"{% endblock %}
 	{% block content %}
-    {% for author in authors %}
+    
     <div class="card-list">
-        <div class="card-user" data-id={{ author.id }}>
-        <div class="card-user__header">
-            <h2 class="card-user__title">{{ author.username }}</h2>
+        {% for author in authors %}
+        <div class="card-user" data-id="{{ author.id }}">
+            <div class="card-user__header">
+                <h2 class="card-user__title">"{{ author.username }}"</h2>
+            </div>
+            <div class="card-user__body">
+                <ul class="card-user__items">
+                    {% for recipe in author.user_recipes.all %}
+                    {% thumbnail recipe.image "50x50" crop="center" upscale=True as im %}
+                    <li class="card-user__item">
+                        <div class="recipe">
+                            <img src="{{ im.url }}" alt="какой-то-текст" class="recipe__image">
+                            <h3 class="recipe__title">"{{ recipe.title }}"</h3>
+                            <p class="recipe__text"><span class="icon-time"></span>"{{ recipe.cooking_duration}} мин."</p>
+                        </div>
+                    </li>
+                    {% endthumbnail %}
+                    {% endfor %}
+                    <li class="card-user__item">
+                        <a href="{% url 'user_profile' author.id %}" class="card-user__link link">Еще рецепты автора...</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-user__footer">
+                {% csrf_token %}
+                <button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Отписаться</button>
+            </div>
         </div>
-        <div class="card-user__body">
-            <ul class="card-user__items">
-                {% for recipe in author.user_recipes.all %}
-                {% thumbnail recipe.image "50x50" crop="center" upscale=True as im %}
-                <li class="card-user__item">
-                    <div class="recipe">
-                        <img src="{{ im.url }}" class="recipe__image">
-                        <h3 class="recipe__title">{{ recipe.title }}</h3>
-                        <p class="recipe__text"><span class="icon-time"></span>{{ recipe.cooking_duration}} мин.</p>
-                        
-                    </div>
-                </li>
-                {% endthumbnail %}
-                {% endfor %}
-      
-            </ul>
-        </div>
-        <div class="card-user__footer">
-            {% csrf_token %}
-            <button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Отписаться</button>
-        </div>
+        {% endfor %}
     </div>
-    </div>
-	{% endfor %}
-	{% endblock %}
+	
+    {% endblock %}
+    {% block script %}
 <script src="{% static 'js/components/MainCards.js' %}"></script>
 <script src="{% static 'js/components/MyFollow.js' %}"></script>
 <script src="{% static 'js/config/config.js' %}"></script>
@@ -43,5 +47,4 @@
 <script src="{% static 'js/components/Header.js' %}"></script>
 <script src="{% static 'js/api/Api.js' %}"></script>
 <script src="{% static 'myFollow.js' %}"></script>
-</body>
-</html>
+{% endblock %}

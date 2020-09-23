@@ -4,23 +4,27 @@
 {% for item in recipes %}
 	<div class="card" data-id={{ item.id }}>
 		{% thumbnail item.image "350x250" crop="center" upscale=True as im %}
-		<a href="recipes/{{ item.id }}" class="link">{% if item.image %}<img src="{{ im.url }}">
+		<a href="{% url 'recipes:recipe_detail' item.id %}" class="link">{% if item.image %}<img src="{{ im.url }}">
 		{% endif %}</a>
 		{% endthumbnail %}
 		<div class="card__body">
-			<a class="card__title link" href="recipes/{{ item.id }}" target="_blank">{{ item.title }}</a>
+			<a class="card__title link" href="{% url 'recipes:recipe_detail' item.id %}">{{ item.title }}</a>
 			<ul class="card__items">
 				{% include "tags.html" with tags=item.taglist %}  
 			</ul>
 			<div class="card__items card__items_column">
 				<p class="card__text"><span class="icon-time"></span>{{ item.cooking_duration }} мин.</p>
-				<p class="card__text"><span class="icon-user"></span> <a href="users/{{ item.author.id }}" style="color: black">{{ item.author }}</a></p>
+				<p class="card__text"><span class="icon-user"></span> <a href="{% url 'user_profile' item.author.id %}" style="color: black">{{ item.author }}</a></p>
 			</div>
 		</div>
 		<div class="card__footer">
 			{% csrf_token %}
-			<button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-			<button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+			<button class="button button_style_light-blue" name="purchases" 
+			{% if item.id not in cart_ids %}data-out><span class="icon-plus button__icon"></span>Добавить в покупки
+			{% else %}><span class="icon-check button__icon"></span>Рецепт добавлен{% endif %}</button>
+			<button class="button button_style_none" name="favorites" 
+			{% if item.id not in favourite_ids %}data-out><span class="icon-favorite"></span>
+			{% else %}><span class="icon-favorite icon-favorite_active"></span>{% endif %}</button>
 		</div>
 	</div>
 {% endfor %}

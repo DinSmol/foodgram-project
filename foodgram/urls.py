@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from users.views import index, follows
+from users.views import index, follows, user_profile
 from cart.views import cart_detail, PurchasesView
 from recipes import views
 from ingredients.views import Ingredients
@@ -15,6 +15,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("auth/", include("users.urls")),
     path("auth/", include("django.contrib.auth.urls")),
+    path('users/<int:id>/', user_profile, name='user_profile'),
 
     path('cart/', include('cart.urls', namespace='cart')),
 
