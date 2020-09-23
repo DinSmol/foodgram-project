@@ -35,13 +35,13 @@ def cart_detail(request):
 def cart_export(request):
     cart = Cart(request)
     res = cart.cart.values()
-    new_csvfile = StringIO.StringIO()
+    new_csvfile = StringIO()
 
     wr = csv.writer(new_csvfile, quoting=csv.QUOTE_ALL)
     for item in res:
-        products = item.ingredientlist
-        wr.writerows([[item.title]])
-        for product in products:
+        recipe = get_object_or_404(Recipe, id=item['id'])
+        wr.writerows([[item['title']]])
+        for product in recipe.ingredientlist:
             wr.writerows(
                 [[product.ingredient.name +
                 '-' + str(product.quantity) +

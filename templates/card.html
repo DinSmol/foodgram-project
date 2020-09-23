@@ -23,8 +23,8 @@
 			{% if item.id not in cart_ids %}data-out><span class="icon-plus button__icon"></span>Добавить в покупки
 			{% else %}><span class="icon-check button__icon"></span>Рецепт добавлен{% endif %}</button>
 			<button class="button button_style_none" name="favorites" 
-			{% if item.id not in favourite_ids %}data-out><span class="icon-favorite"></span>
-			{% else %}><span class="icon-favorite icon-favorite_active"></span>{% endif %}</button>
+			{% if item.id in favourite_ids %}><span class="icon-favorite icon-favorite_active"></span>
+			{% else %}data-out><span class="icon-favorite"></span>{% endif %}</button>
 		</div>
 	</div>
 {% endfor %}

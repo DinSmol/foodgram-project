@@ -5,6 +5,7 @@
 {% block style %}"{% static 'pages/form.css' %}"{% endblock %}
 {% block content %}
     <div class="form-container">
+			
         <form class="form" method="post"> 
             <div class="form__group">
                 <label for="id_username" class="form__label">Имя</label>
@@ -17,14 +18,28 @@
                 <label for="id_password" class="form__label">Пароль</label>
                 <div class="form__field-group">
                     <input type="password" name="password" id="id_password" class="form__input">
-                    <span class="form__error">{{ form.errors }}</span>
+                    <span class="form__error"></span>
                 </div>
             </div>
             <div class="form__footer">
                 {% csrf_token %}
                 <button class="button button_style_blue" name="login" value="Log In">Войти</button>
                 <a class="form__forgot-link">Забыли пароль?</a>
-            </div>
+			</div>
+			{% if form.errors %}
+			{% for field in form %}
+				{% for error in field.errors %}
+					<div class="alert alert-danger">
+						<strong>{{ error|escape }}</strong>
+					</div>
+				{% endfor %}
+			{% endfor %}
+			{% for error in form.non_field_errors %}
+				<div class="alert alert-danger">
+					<strong>{{ error|escape }}</strong>
+				</div>
+			{% endfor %}
+			{% endif %}
         </form>
     </div>
 {% endblock %}

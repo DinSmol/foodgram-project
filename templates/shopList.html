@@ -6,7 +6,7 @@
 	{% block content %}
     <div class="card-list card-list_column">
         <ul class="shopping-list">
-            {% include 'shopList_item.html' %}
+            {% include 'shopItem.html' %}
 		</ul>
 		<form action="{% url 'cart:cart_export' %}" method="post">
 			{% csrf_token %}

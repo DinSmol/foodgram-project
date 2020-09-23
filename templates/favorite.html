@@ -10,7 +10,7 @@
             {% include 'card.html' with recipes=recipes %}
 	{% endblock %}
         {% if recipes.has_other_pages %}
-        {% include "nav.html" with page=recipes paginator=paginator%}
+        {% include "pagination.html" with page=recipes paginator=paginator%}
 	{% endif %}
     {% include 'footer.html' %}
     {% block script %}
@@ -22,7 +22,7 @@
             window.history.pushState({}, document.title, "");
             var url = window.location.href;    
             if (url.indexOf('?') > -1){
-                url = window.location.origin; 
+                url = window.location.origin + window.location.pathname; 
                 url += '?param=1'
             }
             else{

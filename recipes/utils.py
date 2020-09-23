@@ -44,7 +44,7 @@ def random_string_generator(
 
 
 def unique_slug_generator(instance):
-    slug = slugify(instance.title.lower())
+    slug = slugify(instance.title.lower(), allow_unicode=True)
 
     Klass = instance.__class__
     qs_exists = Klass.objects.filter(slug=slug).exists()
@@ -59,5 +59,7 @@ def unique_slug_generator(instance):
 
 def get_favourites(request):
     user = request.user
-    favourite_ids = [item.id for item in user.user_favourites.all()]
-    return favourite_ids
+    if user.is_authenticated:
+        favourite_ids = [item.id for item in user.user_favourites.all()]
+        return favourite_ids
+    return None

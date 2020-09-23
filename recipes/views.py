@@ -1,21 +1,17 @@
 import json
 
+from cart.utils import get_cart_ids
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View
+
 from ingredients.views import get_ingredients
 from recipes.models import Follow, Recipe
-from django.core.paginator import Paginator
-from cart.utils import get_cart_ids
 
 from .forms import RecipeForm
-from .utils import (
-    get_tags,
-    unique_slug_generator,
-    get_filters,
-    get_favourites
-    )
+from .utils import get_favourites, get_filters, get_tags, unique_slug_generator
 
 
 def new(request):
@@ -87,10 +83,12 @@ def recipe_change(request, id):
 
 def recipe_detail(request, id):
     recipe = get_object_or_404(Recipe, id=id)
+    favourite_ids = get_favourites(request)
     return render(
         request,
         'singlePage.html',
-        {'recipe': recipe}
+        {'recipe': recipe,
+        'favourite_ids': favourite_ids,}
     )
 
 

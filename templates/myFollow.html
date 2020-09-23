@@ -38,7 +38,10 @@
         {% endfor %}
     </div>
 	
-    {% endblock %}
+	{% endblock %}
+	{% if authors.has_other_pages %}
+        {% include "pagination.html" with page=authors paginator=paginator%}
+	{% endif %}
     {% block script %}
 <script src="{% static 'js/components/MainCards.js' %}"></script>
 <script src="{% static 'js/components/MyFollow.js' %}"></script>

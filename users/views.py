@@ -39,7 +39,10 @@ def index(request):
 
 def user_profile(request, id):
     author = get_object_or_404(User, id=id)
+    cart_ids = get_cart_ids(request)
     recipes = Recipe.objects.filter(author=author)
+    filters, recipes = filtered_recipes(request)
+    recipes = recipes.filter(author=author)
     try:
         follow = Follow.objects.filter(user=request.user, author=author)[0]
     except IndexError:
@@ -47,7 +50,11 @@ def user_profile(request, id):
     return render(
         request,
         'authorRecipe.html',
-        {'recipes': recipes, 'author': author, 'follow': follow}
+        {'filters': filters,
+        'cart_ids': cart_ids,
+        'recipes': recipes,
+        'author': author,
+        'follow': follow}
     )
 
 
@@ -60,6 +67,8 @@ def logout(request):
 def follows(request):
     user = request.user
     follow = Follow.objects.filter(user=user)
+    import pdb; pdb.set_trace()
+    #  get list of authors (not attributes)
     if follow:
         authors = [item.author for item in follow]
         return render(request, 'myFollow.html', {'authors': authors})

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Tag(models.Model):
     tag_name = models.CharField('Name', max_length=20, null=True)
-    tag_name_eng = models.CharField('Name', max_length=20, null=True, blank=True)
+    tag_name_eng = models.CharField('Name_eng', max_length=20, null=True, blank=True)
     value = models.CharField('Value', max_length=64)
     style = models.CharField('Style', max_length=64, null=True)
 
