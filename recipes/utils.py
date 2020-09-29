@@ -4,6 +4,7 @@ import string
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.text import slugify
+
 from recipes.models import Recipe, Tag
 
 

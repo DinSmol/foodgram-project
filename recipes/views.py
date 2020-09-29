@@ -1,13 +1,13 @@
 import json
 
-from cart.utils import get_cart_ids
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View
-
 from ingredients.views import get_ingredients
+
+from cart.utils import get_cart_ids
 from recipes.models import Follow, Recipe
 
 from .forms import RecipeForm

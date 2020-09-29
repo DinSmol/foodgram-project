@@ -67,8 +67,6 @@ def logout(request):
 def follows(request):
     user = request.user
     follow = Follow.objects.filter(user=user)
-    import pdb; pdb.set_trace()
-    #  get list of authors (not attributes)
     if follow:
         authors = [item.author for item in follow]
         return render(request, 'myFollow.html', {'authors': authors})

@@ -32,9 +32,10 @@
                 </div>
                 <ul class="single-card__items">
                     {% csrf_token %}
-                    <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button></li>
-                    <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
-                </ul>
+                    <li class="single-card__item"><button class="button button_style_blue" name="purchases" {% if recipe.id not in cart_ids %}data-out><span class="icon-plus button__icon"></span>Добавить в покупки
+						{% else %}><span class="icon-check button__icon"></span>Рецепт добавлен{% endif %}</button></li>
+                    <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>					
+				</ul>
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингридиенты:</h3>
                     <div class="single-card__items single-card__items_column">
