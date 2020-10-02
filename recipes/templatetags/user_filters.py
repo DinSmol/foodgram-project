@@ -18,7 +18,7 @@ def addrows(field, css):
 def get_filter_values(value):
     return value.getlist('filters')
 
-
+	
 @register.filter(name='is_favorite')
 def get_filter_values(value):
     return value.getlist('filters')
