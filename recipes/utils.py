@@ -56,11 +56,3 @@ def unique_slug_generator(instance):
                 )
         return unique_slug_generator(instance)
     return slug
-
-
-def get_favourites(request):
-    user = request.user
-    if user.is_authenticated:
-        favourite_ids = [item.id for item in user.user_favourites.all()]
-        return favourite_ids
-    return None

@@ -1,5 +1,6 @@
 {% extends "indexAuth.html" %}
 {% load static %}
+{% load user_filters %}
 {% load thumbnail %}
 	{% block title %}{{ recipe.title }}{% endblock %}
 	{% block style %}"{% static 'pages/single.css' %}"{% endblock %}
@@ -14,7 +15,7 @@
                     <h1 class="single-card__title">{{ recipe.title }}</h1>
                     <div class="single-card__favorite">
 						<button class="button button_style_none" name="favorites" 
-						{% if recipe.id in favourite_ids %}><span class="icon-favorite  icon-favorite_active"></span>
+						{% if recipe.id|is_favorite:request.user %}><span class="icon-favorite  icon-favorite_active"></span>
 						{% else %}data-out><span class="icon-favorite icon-favorite_big"></span>{% endif %}</button>
                     </div>
                 </div>
@@ -34,7 +35,7 @@
                     {% csrf_token %}
                     <li class="single-card__item"><button class="button button_style_blue" name="purchases" {% if recipe.id not in cart_ids %}data-out><span class="icon-plus button__icon"></span>Добавить в покупки
 						{% else %}><span class="icon-check button__icon"></span>Рецепт добавлен{% endif %}</button></li>
-                    <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>					
+                    <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" {% if not recipe.author|is_follow:request.user %}data-out>Подписаться на автора{% else %}>Отписаться от автора{% endif %}</button></li>					
 				</ul>
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингридиенты:</h3>

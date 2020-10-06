@@ -18,13 +18,14 @@ def addrows(field, css):
 def get_filter_values(value):
     return value.getlist('filters')
 
-	
+    
 @register.filter(name='is_favorite')
-def get_filter_values(value):
-    return value.getlist('filters')
+def is_favorite(value, user):
+    if user.is_anonymous: return False
+    return user.user_favourites.filter(id=value).exists()
 
-    user = request.user
-    if user.is_authenticated:
-        favourite_ids = [item.id for item in user.user_favourites.all()]
-        return favourite_ids
-    return None
+
+@register.filter(name='is_follow')
+def is_follow(author, user):
+    if user.is_anonymous: return False
+    return user.user_followers.filter(author=author).exists()

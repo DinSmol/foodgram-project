@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_filters %}
 {% load thumbnail %}
 <div class="card-list">
 {% for item in recipes %}
@@ -23,7 +24,7 @@
 			{% if item.id not in cart_ids %}data-out><span class="icon-plus button__icon"></span>Добавить в покупки
 			{% else %}><span class="icon-check button__icon"></span>Рецепт добавлен{% endif %}</button>
 			<button class="button button_style_none" name="favorites" 
-			{% if item.id in favourite_ids %}><span class="icon-favorite icon-favorite_active"></span>
+			{% if item.id|is_favorite:request.user %}><span class="icon-favorite icon-favorite_active"></span>
 			{% else %}data-out><span class="icon-favorite"></span>{% endif %}</button>
 		</div>
 	</div>

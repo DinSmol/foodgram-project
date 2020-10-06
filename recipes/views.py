@@ -11,7 +11,7 @@ from cart.utils import get_cart_ids
 from recipes.models import Follow, Recipe
 
 from .forms import RecipeForm
-from .utils import get_favourites, get_filters, get_tags, unique_slug_generator
+from .utils import get_filters, get_tags, unique_slug_generator
 
 
 def new(request):
@@ -83,12 +83,10 @@ def recipe_change(request, id):
 
 def recipe_detail(request, id):
     recipe = get_object_or_404(Recipe, id=id)
-    favourite_ids = get_favourites(request)
     return render(
         request,
         'singlePage.html',
-        {'recipe': recipe,
-        'favourite_ids': favourite_ids,}
+        {'recipe': recipe}
     )
 
 
@@ -100,7 +98,6 @@ class FavouritesView(View):
         filters = get_filters(request)
         tag_names = [k for k, v in filters.items() if v == 'checked']
         cart_ids = get_cart_ids(request)
-        favourite_ids = get_favourites(request)
         recipes = user.user_favourites.filter(
             tag__tag_name_eng__in=tag_names).distinct()
         paginator = Paginator(recipes, 6)
@@ -109,7 +106,6 @@ class FavouritesView(View):
         request.GET.clear()
 
         context = {
-            'favourite_ids': favourite_ids,
             'cart_ids': cart_ids,
             'filters': filters,
             'recipes': page,
