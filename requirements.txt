@@ -1,0 +1,11 @@
+asgiref==3.2.10
+da-vinci==0.2.2
+Django==3.0.3
+django-thumbnails==0.3.2
+djangorestframework==3.11.1
+isort==5.5.3
+Pillow==7.2.0
+pytz==2020.1
+shortuuid==1.0.1
+sorl-thumbnail==12.6.3
+sqlparse==0.3.1
