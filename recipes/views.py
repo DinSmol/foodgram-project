@@ -137,3 +137,7 @@ class SubscriptionsView(View):
         author = get_object_or_404(User, id=id)
         follow = get_object_or_404(Follow, user=user, author=author).delete()
         return JsonResponse({'success': True})
+
+
+def handler404(request, exception):
+    return render(request, "404.html", {"path": request.path}, status=404)

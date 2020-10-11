@@ -1,16 +1,19 @@
-from django.contrib import admin
-from django.urls import path
-from users.views import index, follows, user_profile
-from cart.views import cart_detail, PurchasesView
-from recipes import views
-from ingredients.views import Ingredients
-from django.conf.urls.static import static
+from cart.views import PurchasesView, cart_detail
 from django.conf import settings
-from django.urls import include
+from django.conf.urls import handler404
+from django.conf.urls.static import static
+from django.contrib import admin
 from django.contrib.flatpages import views as flatpages_views
+from django.urls import include, path
+from ingredients.views import Ingredients
+from recipes import views
+from users.views import follows, index, user_profile
+
+handler404 = 'recipes.views.handler404'
 
 
 urlpatterns = [
+	
     path('', index, name='index'),
     path('admin/', admin.site.urls),
     path("auth/", include("users.urls")),
