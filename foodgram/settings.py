@@ -25,7 +25,7 @@ SECRET_KEY = '70d%^214(inu(5p4lqczux5_t+*02d@7oj@-f4&40h^!fqkvxo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*', '84.201.135.235', 'yasite.tk', 'www.yasite.tk']
+ALLOWED_HOSTS = ['84.201.135.235', 'yasite.tk', 'www.yasite.tk']
 
 
 # Application definition
